@@ -1,0 +1,408 @@
+<template>
+  <el-container>
+    <el-aside :width="isCollapse ? '64px' : '210px'">
+      <div class="side-top">
+        <img src="@/assets/images/nazha.gif">
+        <span v-show="!isCollapse" class="system">{{ webAbbreviation }}</span>
+      </div>
+      <div class="side-menu">
+        <el-menu background-color="#304156" text-color="#bfcbd9" active-text-color="#409eff" unique-opened router
+          :collapse="isCollapse" :collapse-transition="false" :default-active="activeNav">
+          <el-menu-item index="/dashboard">
+            <svg-icon icon-class="home" />
+            <span slot="title">首页</span>
+          </el-menu-item>
+          <template v-for="v1 in $store.state.menus">
+            <el-menu-item v-if="! v1.children.length" :index="v1.path+'/index'" :key="v1.id">
+              <svg-icon :icon-class="v1.icon" />
+              <span slot="title">{{ v1.title}}</span>
+            </el-menu-item>
+            <el-submenu v-else :index="v1.id+''" :key="v1.id">
+              <template slot="title">
+                <svg-icon :icon-class="v1.icon" />
+                <span>{{ v1.title }}</span>
+              </template>
+              <el-menu-item v-for="v2 in v1.children" :index="v2.path+'/index'" :key="v2.id">
+                <template slot="title">
+                  <svg-icon :icon-class="v2.icon" />
+                  <span>{{ v2.title }}</span>
+                </template>
+              </el-menu-item>
+            </el-submenu>
+          </template>
+        </el-menu>
+      </div>
+    </el-aside>
+    <el-container>
+      <el-header height="82px">
+        <div class="head1">
+          <div class="head-left">
+            <span @click="isCollapse = !isCollapse">
+              <svg-icon :icon-class="isCollapse ? 'indent' : 'outdent'" />
+            </span>
+            <el-breadcrumb separator="/">
+              <el-breadcrumb-item v-if="$route.path != '/dashboard'" :to="{ path: '/dashboard' }">首页
+              </el-breadcrumb-item>
+              <el-breadcrumb-item v-else>首页</el-breadcrumb-item>
+              <el-breadcrumb-item v-for="(item, index) in $route.meta.breadcrumb" :key="index">
+                <router-link v-if="item.path" :to="item.path">{{ item.title }}</router-link>
+                <span v-else style="color: #909399;">{{ item.title }}</span>
+              </el-breadcrumb-item>
+            </el-breadcrumb>
+          </div>
+          <div>
+            <el-dropdown trigger="click" size="medium" @command="handleCommand">
+              <span class="el-dropdown-link">
+                {{ $store.state.account }}<i class="el-icon-caret-bottom el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="profile">个人资料</el-dropdown-item>
+                <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+        </div>
+        <div class="tags-view">
+          <router-link v-for="tag in $store.state.navTabs" :key="tag.path" :to="{ path: tag.path, query: tag.query}"
+            :class="{active: isActive(tag.path)}" class="tags-view-item" @click.middle.native="closeSelectedTag(tag)"
+            @contextmenu.prevent.native="openMenu(tag,$event)">
+            {{tag.title}}
+            <span v-if="tag.path != '/dashboard'" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
+          </router-link>
+          <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
+            <li @click="refreshSelectedTag">刷新</li>
+            <li v-show="selectedTag.path != '/dashboard'" @click="closeSelectedTag(selectedTag)">关闭</li>
+            <li v-show="selectedTag.path != '/dashboard'" @click="closeOthersTags">关闭其他</li>
+            <li @click="closeAllTags">关闭全部</li>
+          </ul>
+        </div>
+      </el-header>
+      <el-main>
+        <transition name="slide-fade" mode="out-in">
+          <keep-alive :include="$store.state.cachedViews">
+            <router-view />
+          </keep-alive>
+        </transition>
+      </el-main>
+      <el-footer height="30px" v-html="footerData" />
+    </el-container>
+  </el-container>
+</template>
+
+<script>
+import {
+  removeToken
+} from '@/common/utils/auth'
+import {
+  logout
+} from '@/common/api/logout'
+import Config from '@/settings'
+
+export default {
+  name: 'Layout',
+  data () {
+    return {
+      isCollapse: false,
+      visible: false,
+      left: 0,
+      top: 0,
+      selectedTag: {},
+      webAbbreviation: Config.webAbbreviation
+    }
+  },
+  computed: {
+    activeNav () {
+      if (this.$route.meta.breadcrumb !== undefined && this.$route.meta.breadcrumb.length === 3) {
+        return this.$route.meta.breadcrumb[1].path
+      }
+      return this.$route.path
+    },
+    footerData () {
+      const date = new Date()
+      const startYear = Config.startYear
+      const toYear = date.getFullYear()
+      const year = (startYear === toYear ? startYear : startYear + ' - ' + toYear)
+      return '&copy; ' + year + ' ' + Config.webTitle + ' V' + Config.version
+    }
+  },
+  watch: {
+    visible (value) {
+      if (value) {
+        document.body.addEventListener('click', this.closeMenu)
+      } else {
+        document.body.removeEventListener('click', this.closeMenu)
+      }
+    }
+  },
+  methods: {
+    handleCommand (command) {
+      if (command === 'profile') {
+        if (!this.isActive('/profile/index')) {
+          this.$router.push('/profile')
+        }
+      }
+      if (command === 'logout') {
+        this.logout()
+      }
+    },
+    logout () {
+      this.$confirm('确定注销并退出系统吗？', '提示', {
+        confirmButtonText: '是的',
+        cancelButtonText: '再想想',
+        type: 'warning'
+      }).then(() => {
+        logout().then(res => {
+          this.$message.success(res.msg)
+          removeToken()
+          location.reload()
+        })
+      }).catch(() => {})
+    },
+    isActive (path) {
+      return this.$route.path === path
+    },
+    openMenu (tag, e) {
+      this.visible = true
+      this.selectedTag = tag
+
+      this.top = e.clientY
+      this.left = e.clientX
+    },
+    closeMenu () {
+      this.visible = false
+    },
+    closeSelectedTag (tag) {
+      const i = this.$store.state.cachedViews.indexOf(tag.name)
+      if (i !== -1) {
+        this.$store.state.cachedViews.splice(i, 1)
+      }
+
+      const j = this.$store.state.navTabs.indexOf(tag)
+      if (j !== -1) {
+        this.$store.state.navTabs.splice(j, 1)
+      }
+
+      if (this.isActive(tag.path)) {
+        this.$router.push(this.$store.state.navTabs[(j - 1)].fullPath)
+      }
+    },
+    refreshSelectedTag () {
+      this.$store.state.cachedViews = this.$store.state.cachedViews.filter(v => {
+        return v === 'Dashboard' || v !== this.selectedTag.name
+      })
+
+      this.$nextTick(() => {
+        this.$router.replace({
+          path: '/redirect' + this.selectedTag.fullPath
+        })
+      })
+    },
+    closeOthersTags () {
+      this.$store.state.cachedViews = this.$store.state.cachedViews.filter(v => {
+        return v === 'Dashboard' || v === this.selectedTag.name
+      })
+
+      this.$store.state.navTabs = this.$store.state.navTabs.filter(v => {
+        return v.path === '/dashboard' || v.path === this.selectedTag.path
+      })
+
+      if (!this.isActive(this.selectedTag.path)) {
+        this.$router.push(this.selectedTag.fullPath)
+      }
+    },
+    closeAllTags () {
+      this.$store.state.cachedViews = this.$store.state.cachedViews.filter(v => {
+        return v === 'Dashboard'
+      })
+
+      this.$store.state.navTabs = this.$store.state.navTabs.filter(v => {
+        return v.path === '/dashboard'
+      })
+
+      if (!this.isActive('/dashboard')) {
+        this.$router.push('/dashboard')
+      }
+    }
+  }
+}
+</script>
+
+<style scoped lang="less">
+  .el-container {
+    height: 100%;
+    overflow-y: hidden;
+  }
+
+  .el-aside {
+    background-color: #304156;
+    transition: width .3s ease-in-out;
+  }
+
+  .side-top {
+    width: 100%;
+    height: 60px;
+    line-height: 50px;
+    overflow: hidden;
+    text-align: center;
+    img {
+      width: 40px;
+      height: 40px;
+      vertical-align: middle;
+      margin-right: 6px;
+      border-radius: 50%;
+    }
+    .system {
+      font-size: 14px;
+      color: #fff;
+      font-weight: 600;
+    }
+  }
+
+  .side-menu {
+    .el-menu {
+      border-right: 0;
+    }
+  }
+
+  .el-submenu {
+    .el-menu-item {
+      background-color: #1F2D3D !important;
+    }
+
+    .el-menu-item:hover {
+      background-color: #141e2a !important;
+    }
+  }
+
+  .el-menu-item .svg-icon,
+  .el-submenu .svg-icon {
+    margin-right: 10px;
+  }
+
+  .el-header {
+    padding: 0 !important;
+  }
+
+  .head1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    padding: 0 20px;
+    box-shadow: 0 1px 1px #e6e6e6;
+  }
+
+  .head-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    .svg-icon {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+  }
+
+  .el-breadcrumb {
+    margin-left: 20px;
+  }
+
+  .el-footer {
+    line-height: 30px;
+    border-top: 1px #e6e6e6 solid;
+    font-size: 12px;
+    color: #737373;
+  }
+
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #686868;
+    margin-right: 10px;
+  }
+
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
+
+  .tags-view {
+    height: 30px;
+    box-shadow: 0 2px 4px #d9d9d9;
+    display: flex;
+    align-items: center;
+  }
+
+  .tags-view-item {
+    font-size: 12px;
+    padding: 4px 8px 3px;
+    margin-right: 6px;
+    cursor: pointer;
+    color: #6b6b6b;
+    border: 1px #d0d0d0 solid;
+    text-decoration: none;
+  }
+
+  .tags-view-item:first-of-type {
+    margin-left: 20px;
+  }
+
+  .active {
+    background-color: #00b685;
+    border-color: #00b685;
+    color: #f1f1f1;
+  }
+
+  .active::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #fff;
+    border-radius: 50%;
+    margin-right: 3px;
+  }
+
+  .el-icon-close {
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    text-align: center;
+    line-height: 16px;
+  }
+
+  .el-icon-close:hover {
+    background-color: #ff6666;
+    color: #fff;
+  }
+
+  .contextmenu {
+    margin: 0;
+    background: #fff;
+    z-index: 1000;
+    position: absolute;
+    list-style-type: none;
+    padding: 5px 0;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #333;
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
+  }
+
+  .contextmenu li {
+    margin: 0;
+    padding: 7px 16px;
+    cursor: pointer;
+  }
+
+  .contextmenu li:hover {
+    background: #eee;
+  }
+
+  .slide-fade-enter-active {
+    transition: all .3s linear;
+  }
+
+  .slide-fade-enter {
+    transform: translateX(-10px);
+  }
+</style>
