@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p style="color: #666;font-size: 14px;">备注：private_key_bits=>1024</p>
+    <p style="color: #666;font-size: 14px;">备注：private_key_bits=>1024,digest_alg=>sha512</p>
     <p>
       <el-button type="primary" size="mini" @click="getKey()" :loading="laoding">生成密钥</el-button>
     </p>
