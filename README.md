@@ -4,8 +4,6 @@
 
 项目使用@vue-cli构建，Vue2.6.11 + Element-ui2.15.7组合。
 
-演示地址：http://weiadmin.weifx.top/
-
 项目使用说明：
 
 1. 安装
@@ -38,6 +36,6 @@
 
 特别备注：需配合 [wei-admin-api](https://github.com/lajixiaohao/wei-admin-api) 接口项目使用
 
-项目地址：https://github.com/lajixiaohao/wei-admin
+演示地址：http://weiadmin.weifx.top/
 
 联系邮箱：2壹7陆9柒4柒3零#qq.com
