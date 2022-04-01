@@ -14,7 +14,7 @@
 
 2. 打开.env.development、.env.production文件，填写相应接口域名/IP
 
-3. 打开src/config.js文件，完成基础配置
+3. 打开src/settings.js文件，完成基础配置
 
 4. 使用lint检查
 
