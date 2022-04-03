@@ -1,7 +1,7 @@
 <template>
   <el-dialog :title="permissionData.title" :visible.sync="permissionData.isShow" @close="closeDialog"
     :close-on-click-modal="false">
-    <el-form :model="permissionData.form1" :rules="rules" ref="form1" label-width="120px">
+    <el-form :model="permissionData.form1" :rules="rules" ref="form1" label-width="100px">
       <el-form-item label="上级菜单" prop="parents">
         <el-cascader v-model="permissionData.form1.parents" :options="permissionData.menus" />
       </el-form-item>
@@ -98,6 +98,6 @@ export default {
 
 <style scoped>
   .el-form {
-    width: 400px;
+    max-width: 400px;
   }
 </style>

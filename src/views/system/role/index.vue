@@ -154,7 +154,7 @@ export default {
     closeAddOrEditDialog (res) {
       this.addOrEditData.isShow = false
       this.addOrEditData.form1 = {}
-      if (res) {
+      if (res === true) {
         this.loadList(this.page)
       }
     }

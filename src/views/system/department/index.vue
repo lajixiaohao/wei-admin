@@ -121,7 +121,7 @@ export default {
     },
     closeAddOrEditDialog (res) {
       this.addOrEditData.isShow = false
-      if (res) {
+      if (res === true) {
         const node = this.$refs.tree.getNode(this.node)
         node.loaded = false
         node.expand()
@@ -150,6 +150,9 @@ export default {
 
   .el-tree {
     width: 600px;
+    border: 1px solid #E4E7ED;
+    margin-top: 6px;
+    border-radius: 4px;
   }
 
   .custom-tree-node {

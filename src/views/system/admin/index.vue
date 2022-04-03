@@ -222,7 +222,7 @@ export default {
       this.addOrEditData.isShow = false
       this.addOrEditData.form1 = {}
       this.addOrEditData.dept_checked = []
-      if (res) {
+      if (res === true) {
         this.loadList(this.page)
       }
     },

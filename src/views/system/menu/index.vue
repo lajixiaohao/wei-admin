@@ -210,7 +210,7 @@ export default {
     closeAddOrEditDialog (res) {
       this.addOrEditData.isShow = false
       this.addOrEditData.form1 = {}
-      if (res) {
+      if (res === true) {
         this.loadList(this.page)
       }
     },
@@ -225,7 +225,7 @@ export default {
     closeRegisterRouteDialog (res) {
       this.registerRouteData.isShow = false
       this.registerRouteData.form1 = {}
-      if (res) {
+      if (res === true) {
         this.loadList(this.page)
       }
     },
@@ -249,7 +249,7 @@ export default {
     closePermissionDialog (res) {
       this.permissionData.isShow = false
       this.permissionData.form1 = {}
-      if (res) {
+      if (res === true) {
         this.loadList(this.page)
       }
     }

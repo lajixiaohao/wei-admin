@@ -1,7 +1,7 @@
 <template>
   <el-dialog :title="addOrEditData.title" :visible.sync="addOrEditData.isShow" @close="closeDialog"
     :close-on-click-modal="false">
-    <el-form :model="addOrEditData.form1" :rules="rules" ref="form1" label-width="120px">
+    <el-form :model="addOrEditData.form1" :rules="rules" ref="form1" label-width="100px">
       <el-form-item label="上级部门">
         <el-input v-model="addOrEditData.parent_name" :disabled="true" />
       </el-form-item>
@@ -88,6 +88,6 @@ export default {
 
 <style scoped>
   .el-form {
-    width: 400px;
+    max-width: 400px;
   }
 </style>

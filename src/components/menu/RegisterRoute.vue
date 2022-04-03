@@ -1,7 +1,7 @@
 <template>
   <el-dialog :title="registerRouteData.title" :visible.sync="registerRouteData.isShow" @close="closeDialog"
     :close-on-click-modal="false">
-    <el-form :model="registerRouteData.form1" :rules="rules" ref="form1" label-width="120px">
+    <el-form :model="registerRouteData.form1" :rules="rules" ref="form1" label-width="100px">
       <el-form-item label="上级菜单" prop="parents">
         <el-cascader v-model="registerRouteData.form1.parents" :options="registerRouteData.menus" />
       </el-form-item>
@@ -111,6 +111,6 @@ export default {
 
 <style scoped>
   .el-form {
-    width: 400px;
+    max-width: 400px;
   }
 </style>

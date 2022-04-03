@@ -1,7 +1,7 @@
 <template>
   <el-dialog :title="addOrEditData.title" :visible.sync="addOrEditData.isShow" @close="closeDialog"
     :close-on-click-modal="false">
-    <el-form :model="addOrEditData.form1" :rules="rules" ref="form1" label-width="120px">
+    <el-form :model="addOrEditData.form1" :rules="rules" ref="form1" label-width="100px">
       <el-form-item v-if="!addOrEditData.form1.id" label="登录名" prop="account">
         <el-input v-model="addOrEditData.form1.account" placeholder="请输入登录名" maxlength="20"
           :disabled="addOrEditData.form1.id > 0" clearable />
@@ -205,7 +205,7 @@ export default {
 
 <style scoped>
   .el-form {
-    width: 400px;
+    max-width: 400px;
   }
 
   .el-tree {

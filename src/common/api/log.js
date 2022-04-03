@@ -15,3 +15,12 @@ export function getLoginList (param) {
     params: param
   })
 }
+
+export function exportLoginLog (param) {
+  return request({
+    url: 'api/log/login/export',
+    method: 'get',
+    params: param,
+    responseType: 'blob'
+  })
+}

@@ -1,7 +1,7 @@
 <template>
   <el-dialog :title="addOrEditData.title" :visible.sync="addOrEditData.isShow" @close="closeDialog"
     :close-on-click-modal="false">
-    <el-form :model="addOrEditData.form1" :rules="rules" ref="form1" label-width="120px">
+    <el-form :model="addOrEditData.form1" :rules="rules" ref="form1" label-width="100px">
       <el-form-item label="上级菜单" prop="parent_id">
         <el-select v-model="addOrEditData.form1.parent_id" placeholder="默认顶级" :disabled="addOrEditData.form1.id > 0">
           <el-option v-for="item in addOrEditData.first_level_menu" :key="item.id" :label="item.title"
@@ -106,6 +106,6 @@ export default {
 
 <style scoped>
   .el-form {
-    width: 440px;
+    max-width: 440px;
   }
 </style>

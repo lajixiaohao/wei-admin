@@ -1,7 +1,7 @@
 <template>
   <el-dialog :title="addOrEditData.title" :visible.sync="addOrEditData.isShow" @close="closeDialog"
     :close-on-click-modal="false">
-    <el-form :model="addOrEditData.form1" :rules="rules" ref="form1" label-width="120px">
+    <el-form :model="addOrEditData.form1" :rules="rules" ref="form1" label-width="100px">
       <el-form-item label="岗位名称" prop="name">
         <el-input v-model="addOrEditData.form1.name" autocomplete="off" placeholder="请输入岗位名称" clearable />
       </el-form-item>
@@ -83,6 +83,6 @@ export default {
 
 <style scoped>
   .el-form {
-    width: 400px;
+    max-width: 340px;
   }
 </style>
