@@ -140,7 +140,9 @@ export default {
             this.loading = false
             this.$message.success(res.msg)
             setToken(res.data.token)
-            this.$router.push(this.redirectPath())
+            this.$router.push(this.redirectPath()).catch(() => {
+              this.$router.push(this.redirectPath())
+            })
           }).catch(() => {
             this.loading = false
             this.loginForm.captcha = ''
@@ -153,18 +155,7 @@ export default {
       })
     },
     redirectPath () {
-      let path = '/dashboard'
-
-      if (this.$route.query.redirect.length) {
-        path = this.$route.query.redirect
-        for (const v in this.$route.query) {
-          if (v !== 'redirect') {
-            path += '&' + v + '=' + this.$route.query[v]
-          }
-        }
-      }
-
-      return path
+      return this.$route.query.redirect !== undefined ? this.$route.query.redirect : '/'
     },
     resetForm () {
       this.$refs.loginForm.resetFields()

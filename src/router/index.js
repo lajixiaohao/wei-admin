@@ -62,17 +62,15 @@ const router = new VueRouter({
 // 白名单
 const whiteList = ['/login']
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   if (getToken('access_token')) {
     if (to.path === '/login') {
-      return next('/')
+      return next({ path: '/' })
     } else {
-      if (!store.state.account) {
-        initialize().then(res => {
-          store.state.account = res.data.account
-          store.state.menus = res.data.menus
-          _generateRoute(res.data.menus)
-        })
+      if (store.state.account.length === 0) {
+        const res = await initialize()
+        store.dispatch('initData', res.data)
+        _generateRoute(res.data.menus)
       }
       next()
     }
@@ -80,8 +78,7 @@ router.beforeEach((to, from, next) => {
     if (whiteList.indexOf(to.path) !== -1) {
       next()
     } else {
-      const redirect = to.fullPath ? '?redirect=' + to.fullPath : ''
-      return next('/login' + redirect)
+      next('/login?redirect=' + to.fullPath)
     }
   }
 })
