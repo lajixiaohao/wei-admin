@@ -10,8 +10,10 @@ Vue.use(Vuex)
 const state = {
   account: '',
   menus: [],
-  navTabs: [{ title: '首页', name: 'Dashboard', path: '/dashboard', fullPath: '/dashboard', query: {} }],
-  cachedViews: ['Dashboard']
+  tagViews: [],
+  cachedViews: []
+  // tagViews: [{ title: '首页', name: 'Dashboard', path: '/dashboard', fullPath: '/dashboard', query: {} }],
+  // cachedViews: ['Dashboard']
 }
 
 export default new Vuex.Store({

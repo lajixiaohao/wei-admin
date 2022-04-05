@@ -12,7 +12,7 @@
             <svg-icon icon-class="home" />
             <span slot="title">首页</span>
           </el-menu-item>
-          <template v-for="v1 in $store.state.menus">
+          <template v-for="v1 in getMenu">
             <el-menu-item v-if="! v1.children.length" :index="v1.path+'/index'" :key="v1.id">
               <svg-icon :icon-class="v1.icon" />
               <span slot="title">{{ v1.title}}</span>
@@ -40,7 +40,7 @@
             <span @click="isCollapse = !isCollapse">
               <svg-icon :icon-class="isCollapse ? 'indent' : 'outdent'" />
             </span>
-            <el-breadcrumb separator="/">
+            <!-- <el-breadcrumb separator="/">
               <el-breadcrumb-item v-if="$route.path != '/dashboard'" :to="{ path: '/dashboard' }">首页
               </el-breadcrumb-item>
               <el-breadcrumb-item v-else>首页</el-breadcrumb-item>
@@ -48,7 +48,7 @@
                 <router-link v-if="item.path" :to="item.path">{{ item.title }}</router-link>
                 <span v-else style="color: #909399;">{{ item.title }}</span>
               </el-breadcrumb-item>
-            </el-breadcrumb>
+            </el-breadcrumb> -->
           </div>
           <div>
             <el-dropdown trigger="click" size="medium" @command="handleCommand">
@@ -63,23 +63,23 @@
           </div>
         </div>
         <div class="tags-view">
-          <router-link v-for="tag in $store.state.navTabs" :key="tag.path" :to="{ path: tag.path, query: tag.query}"
+          <router-link v-for="tag in getTagView" :key="tag.path" :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
             :class="{active: isActive(tag.path)}" class="tags-view-item" @click.middle.native="closeSelectedTag(tag)"
             @contextmenu.prevent.native="openMenu(tag,$event)">
-            {{tag.title}}
-            <span v-if="tag.path != '/dashboard'" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
+            {{ tag.title }}
+            <span v-if="tag.name !== 'Dashboard'" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
           </router-link>
           <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
             <li @click="refreshSelectedTag">刷新</li>
-            <li v-show="selectedTag.path != '/dashboard'" @click="closeSelectedTag(selectedTag)">关闭</li>
-            <li v-show="selectedTag.path != '/dashboard'" @click="closeOthersTags">关闭其他</li>
+            <li v-show="selectedTag.name !== 'Dashboard'" @click="closeSelectedTag(selectedTag)">关闭</li>
+            <li @click="closeOthersTags">关闭其他</li>
             <li @click="closeAllTags">关闭全部</li>
           </ul>
         </div>
       </el-header>
       <el-main>
         <transition name="slide-fade" mode="out-in">
-          <keep-alive :include="$store.state.cachedViews">
+          <keep-alive :include="getCachedView">
             <router-view />
           </keep-alive>
         </transition>
@@ -111,13 +111,22 @@ export default {
     }
   },
   computed: {
+    getMenu () {
+      return this.$store.state.menus
+    },
+    getTagView () {
+      return this.$store.state.tagViews
+    },
+    getCachedView () {
+      return this.$store.state.cachedViews
+    },
     activeNav () {
       if (this.$route.meta.breadcrumb !== undefined && this.$route.meta.breadcrumb.length === 3) {
         return this.$route.meta.breadcrumb[1].path
       }
       return this.$route.path
     },
-    footerData () {
+    footerData: () => {
       const date = new Date()
       const startYear = Config.startYear
       const toYear = date.getFullYear()
@@ -126,6 +135,9 @@ export default {
     }
   },
   watch: {
+    $route () {
+      this.addTags()
+    },
     visible (value) {
       if (value) {
         document.body.addEventListener('click', this.closeMenu)
@@ -134,7 +146,18 @@ export default {
       }
     }
   },
+  mounted () {
+    this.addTags()
+  },
   methods: {
+    addTags () {
+      console.log(this.$route)
+      const { name } = this.$route
+      if (name) {
+        this.$store.dispatch('addView', this.$route)
+      }
+      return false
+    },
     handleCommand (command) {
       if (command === 'profile') {
         if (!this.isActive('/profile/index')) {
@@ -187,13 +210,14 @@ export default {
       }
     },
     refreshSelectedTag () {
-      this.$store.state.cachedViews = this.$store.state.cachedViews.filter(v => {
+      /* this.$store.state.cachedViews = this.$store.state.cachedViews.filter(v => {
         return v === 'Dashboard' || v !== this.selectedTag.name
-      })
-
-      this.$nextTick(() => {
-        this.$router.replace({
-          path: '/redirect' + this.selectedTag.fullPath
+      }) */
+      this.$store.dispatch('refreshView', this.selectedTag.name).then(() => {
+        this.$nextTick(() => {
+          this.$router.replace({
+            path: '/redirect' + this.selectedTag.fullPath
+          })
         })
       })
     },

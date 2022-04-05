@@ -23,7 +23,8 @@ const routes = [{
   children: [{
     path: 'dashboard',
     component: () => import('@/views/home'),
-    name: 'Dashboard'
+    name: 'Dashboard',
+    meta: { title: '首页', cache: true }
   }]
 },
 {
@@ -34,14 +35,7 @@ const routes = [{
     path: 'index',
     component: () => import('@/views/profile/index'),
     name: 'Profile',
-    meta: {
-      title: '个人资料',
-      cache: true,
-      breadcrumb: [{
-        path: '',
-        title: '个人资料'
-      }]
-    }
+    meta: { title: '个人资料', cache: true }
   }]
 },
 {
@@ -84,9 +78,9 @@ router.beforeEach(async (to, from, next) => {
 })
 
 // 不需要缓存的组件
-const noCacheComponents = ['Login', 'Redirect', 'PageNotFount']
+// const noCacheComponents = ['Login', 'Redirect', 'PageNotFount']
 
-router.afterEach((to, from) => {
+/* router.afterEach((to, from) => {
   if (noCacheComponents.indexOf(to.name) === -1) {
     let currentFullPath = to.fullPath
     let tag = {}
@@ -118,37 +112,19 @@ router.afterEach((to, from) => {
       store.state.navTabs[i].fullPath = to.fullPath
     }
   }
-})
+}) */
 
+// 最多支持2级菜单
 const _generateRoute = (menus) => {
   menus.forEach(v1 => {
-    if (!v1.children.length) {
-      _addRoute(v1, [{
-        path: '',
-        title: v1.title
-      }])
+    if (v1.children.length === 0) {
+      _addRoute(v1)
     } else {
       v1.children.forEach(v2 => {
-        _addRoute(v2, [{
-          path: '',
-          title: v1.title
-        }, {
-          path: '',
-          title: v2.title
-        }])
-
-        if (v2.children.length) {
+        _addRoute(v2)
+        if (v2.children.length > 0) {
           v2.children.forEach(v3 => {
-            _addRoute(v3, [{
-              path: '',
-              title: v1.title
-            }, {
-              path: v2.path + '/index',
-              title: v2.title
-            }, {
-              path: '',
-              title: v3.title
-            }])
+            _addRoute(v3)
           })
         }
       })
@@ -162,7 +138,7 @@ const _generateRoute = (menus) => {
   })
 }
 
-const _addRoute = (a, b) => {
+const _addRoute = (a) => {
   router.addRoute({
     path: a.path,
     component: Layout,
@@ -171,11 +147,7 @@ const _addRoute = (a, b) => {
       path: 'index',
       component: () => import('@/views/' + a.component_path),
       name: a.component_name,
-      meta: {
-        title: a.title,
-        cache: a.is_cache,
-        breadcrumb: b
-      }
+      meta: { title: a.title, cache: a.is_cache }
     }]
   })
 }
