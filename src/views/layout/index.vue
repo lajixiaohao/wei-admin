@@ -40,15 +40,14 @@
             <span @click="isCollapse = !isCollapse">
               <svg-icon :icon-class="isCollapse ? 'indent' : 'outdent'" />
             </span>
-            <!-- <el-breadcrumb separator="/">
-              <el-breadcrumb-item v-if="$route.path != '/dashboard'" :to="{ path: '/dashboard' }">首页
-              </el-breadcrumb-item>
+            <el-breadcrumb separator="/">
+              <el-breadcrumb-item v-if="currentPath !== '/dashboard'" :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
               <el-breadcrumb-item v-else>首页</el-breadcrumb-item>
-              <el-breadcrumb-item v-for="(item, index) in $route.meta.breadcrumb" :key="index">
+              <el-breadcrumb-item v-for="(item, index) in getBreadcrumb" :key="index">
                 <router-link v-if="item.path" :to="item.path">{{ item.title }}</router-link>
                 <span v-else style="color: #909399;">{{ item.title }}</span>
               </el-breadcrumb-item>
-            </el-breadcrumb> -->
+            </el-breadcrumb>
           </div>
           <div>
             <el-dropdown trigger="click" size="medium" @command="handleCommand">
@@ -111,6 +110,12 @@ export default {
     }
   },
   computed: {
+    currentPath () {
+      return this.$route.path || ''
+    },
+    getBreadcrumb () {
+      return this.$route.meta.breadcrumb || []
+    },
     getMenu () {
       return this.$store.state.menus
     },
@@ -152,8 +157,9 @@ export default {
   methods: {
     addTags () {
       console.log(this.$route)
+      const noCachedViews = ['Redirect']
       const { name } = this.$route
-      if (name) {
+      if (name && !noCachedViews.includes(name)) {
         this.$store.dispatch('addView', this.$route)
       }
       return false

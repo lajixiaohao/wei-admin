@@ -23,8 +23,7 @@ const routes = [{
   children: [{
     path: 'dashboard',
     component: () => import('@/views/home'),
-    name: 'Dashboard',
-    meta: { title: '首页', cache: true }
+    name: 'Dashboard'
   }]
 },
 {
@@ -35,7 +34,7 @@ const routes = [{
     path: 'index',
     component: () => import('@/views/profile/index'),
     name: 'Profile',
-    meta: { title: '个人资料', cache: true }
+    meta: { title: '个人资料', cache: true, breadcrumb: [{ path: '', title: '个人资料' }] }
   }]
 },
 {
@@ -56,15 +55,16 @@ const router = new VueRouter({
 // 白名单
 const whiteList = ['/login']
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, from, next) => {
   if (getToken('access_token')) {
     if (to.path === '/login') {
-      return next({ path: '/' })
+      return next('/')
     } else {
       if (store.state.account.length === 0) {
-        const res = await initialize()
-        store.dispatch('initData', res.data)
-        _generateRoute(res.data.menus)
+        initialize().then(res => {
+          store.dispatch('initData', res.data)
+          _generateRoute(res.data.menus)
+        })
       }
       next()
     }
@@ -118,13 +118,13 @@ router.beforeEach(async (to, from, next) => {
 const _generateRoute = (menus) => {
   menus.forEach(v1 => {
     if (v1.children.length === 0) {
-      _addRoute(v1)
+      _addRoute(v1, [{ path: '', title: v1.title }])
     } else {
       v1.children.forEach(v2 => {
-        _addRoute(v2)
+        _addRoute(v2, [{ path: '', title: v1.title }, { path: '', title: v2.title }])
         if (v2.children.length > 0) {
           v2.children.forEach(v3 => {
-            _addRoute(v3)
+            _addRoute(v3, [{ path: '', title: v1.title }, { path: v2.path + '/index', title: v2.title }, { path: '', title: v3.title }])
           })
         }
       })
@@ -138,7 +138,7 @@ const _generateRoute = (menus) => {
   })
 }
 
-const _addRoute = (a) => {
+const _addRoute = (a, b) => {
   router.addRoute({
     path: a.path,
     component: Layout,
@@ -147,7 +147,7 @@ const _addRoute = (a) => {
       path: 'index',
       component: () => import('@/views/' + a.component_path),
       name: a.component_name,
-      meta: { title: a.title, cache: a.is_cache }
+      meta: { title: a.title, cache: a.is_cache, breadcrumb: b }
     }]
   })
 }
