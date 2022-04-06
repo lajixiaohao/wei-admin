@@ -16,9 +16,9 @@ export function getLoginList (param) {
   })
 }
 
-export function exportLoginLog (param) {
+export function exportOperationLog (param) {
   return request({
-    url: 'api/log/login/export',
+    url: 'api/log/operation/export',
     method: 'get',
     params: param,
     responseType: 'blob'

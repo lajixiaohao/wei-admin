@@ -4,6 +4,7 @@
       <el-input v-model="account" size="mini" placeholder="请输入管理员账号" autocomplete="off" clearable
         @keyup.enter.native="search()" />
       <el-button type="primary" size="mini" @click="search()" :loading="loading" icon="el-icon-search">搜索</el-button>
+      <el-button type="info" size="mini" @click="exportExcel" :loading="downloadLoading" icon="el-icon-download">导出</el-button>
     </div>
     <el-table :data="list" :loading="true" border>
       <el-table-column type="index" :index="indexMethod" label="序号" width="50"></el-table-column>
@@ -25,7 +26,8 @@
 
 <script>
 import {
-  getOperationList
+  getOperationList,
+  exportOperationLog
 } from '@/common/api/log'
 
 export default {
@@ -37,7 +39,8 @@ export default {
       page: 1,
       size: 10,
       account: '',
-      loading: false
+      loading: false,
+      downloadLoading: false
     }
   },
   created () {
@@ -67,6 +70,16 @@ export default {
     },
     detail (v) {
       this.$alert(v)
+    },
+    exportExcel () {
+      this.downloadLoading = true
+      exportOperationLog({
+        account: this.account
+      }).then(res => {
+        this.downloadLoading = false
+      }).catch(() => {
+        this.downloadLoading = false
+      })
     }
   },
   computed: {
@@ -82,7 +95,7 @@ export default {
 <style scoped>
   .search {
     display: flex;
-    width: 260px;
+    width: 320px;
   }
 
   .search .el-button {

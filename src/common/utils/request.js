@@ -38,7 +38,7 @@ export function request (config) {
       const a = document.createElement('a')
       a.style.display = 'none'
       a.href = blobURL
-      a.setAttribute('download', filename)
+      a.setAttribute('download', decodeURIComponent(filename))
       if (typeof a.download === 'undefined') {
         a.setAttribute('target', '_blank')
       }
