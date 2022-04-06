@@ -41,7 +41,7 @@
               <svg-icon :icon-class="isCollapse ? 'indent' : 'outdent'" />
             </span>
             <el-breadcrumb separator="/">
-              <el-breadcrumb-item v-if="currentPath !== '/dashboard'" :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
+              <el-breadcrumb-item v-if="isActive('/dashboard') === false" :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
               <el-breadcrumb-item v-else>首页</el-breadcrumb-item>
               <el-breadcrumb-item v-for="(item, index) in getBreadcrumb" :key="index">
                 <router-link v-if="item.path" :to="item.path">{{ item.title }}</router-link>
@@ -52,7 +52,7 @@
           <div>
             <el-dropdown trigger="click" size="medium" @command="handleCommand">
               <span class="el-dropdown-link">
-                {{ $store.state.account }}<i class="el-icon-caret-bottom el-icon--right"></i>
+                {{ getAccount }}<i class="el-icon-caret-bottom el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="profile">个人资料</el-dropdown-item>
@@ -110,8 +110,8 @@ export default {
     }
   },
   computed: {
-    currentPath () {
-      return this.$route.path || ''
+    getAccount () {
+      return this.$store.state.account
     },
     getBreadcrumb () {
       return this.$route.meta.breadcrumb || []
@@ -156,7 +156,6 @@ export default {
   },
   methods: {
     addTags () {
-      console.log(this.$route)
       const noCachedViews = ['Redirect']
       const { name } = this.$route
       if (name && !noCachedViews.includes(name)) {
@@ -201,24 +200,21 @@ export default {
       this.visible = false
     },
     closeSelectedTag (tag) {
-      const i = this.$store.state.cachedViews.indexOf(tag.name)
-      if (i !== -1) {
-        this.$store.state.cachedViews.splice(i, 1)
+      const i = this.getCachedView.indexOf(tag.name)
+      if (i > 0) {
+        this.$store.dispatch('deleteCachedView', i)
       }
 
-      const j = this.$store.state.navTabs.indexOf(tag)
-      if (j !== -1) {
-        this.$store.state.navTabs.splice(j, 1)
-      }
-
-      if (this.isActive(tag.path)) {
-        this.$router.push(this.$store.state.navTabs[(j - 1)].fullPath)
+      const j = this.getTagView.indexOf(tag)
+      if (j > 0) {
+        this.$store.dispatch('deleteTagView', j).then(() => {
+          if (this.isActive(tag.path)) {
+            this.$router.push(this.getTagView[(j - 1)].fullPath)
+          }
+        })
       }
     },
     refreshSelectedTag () {
-      /* this.$store.state.cachedViews = this.$store.state.cachedViews.filter(v => {
-        return v === 'Dashboard' || v !== this.selectedTag.name
-      }) */
       this.$store.dispatch('refreshView', this.selectedTag.name).then(() => {
         this.$nextTick(() => {
           this.$router.replace({
@@ -228,30 +224,18 @@ export default {
       })
     },
     closeOthersTags () {
-      this.$store.state.cachedViews = this.$store.state.cachedViews.filter(v => {
-        return v === 'Dashboard' || v === this.selectedTag.name
+      this.$store.dispatch('deleteOtherView', this.selectedTag).then(() => {
+        if (this.isActive(this.selectedTag.path) === false) {
+          this.$router.push(this.selectedTag.fullPath)
+        }
       })
-
-      this.$store.state.navTabs = this.$store.state.navTabs.filter(v => {
-        return v.path === '/dashboard' || v.path === this.selectedTag.path
-      })
-
-      if (!this.isActive(this.selectedTag.path)) {
-        this.$router.push(this.selectedTag.fullPath)
-      }
     },
     closeAllTags () {
-      this.$store.state.cachedViews = this.$store.state.cachedViews.filter(v => {
-        return v === 'Dashboard'
+      this.$store.dispatch('deleteAllView').then(() => {
+        if (this.isActive('/dashboard') === false) {
+          this.$router.push('/dashboard')
+        }
       })
-
-      this.$store.state.navTabs = this.$store.state.navTabs.filter(v => {
-        return v.path === '/dashboard'
-      })
-
-      if (!this.isActive('/dashboard')) {
-        this.$router.push('/dashboard')
-      }
     }
   }
 }

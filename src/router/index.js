@@ -77,44 +77,7 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-// 不需要缓存的组件
-// const noCacheComponents = ['Login', 'Redirect', 'PageNotFount']
-
-/* router.afterEach((to, from) => {
-  if (noCacheComponents.indexOf(to.name) === -1) {
-    let currentFullPath = to.fullPath
-    let tag = {}
-    const res = store.state.navTabs.some(v => {
-      if (v.name === to.name) {
-        currentFullPath = v.fullPath
-        tag = v
-        return true
-      }
-    })
-
-    if (Object.keys(to.meta).length && to.meta.cache && store.state.cachedViews.indexOf(to.name) === -1) {
-      store.state.cachedViews.push(to.name)
-    }
-
-    if (!res && to.name) {
-      store.state.navTabs.push({
-        title: to.meta.title,
-        name: to.name,
-        path: to.path,
-        query: to.query,
-        fullPath: to.fullPath
-      })
-    }
-
-    if (res && to.fullPath !== currentFullPath) {
-      const i = store.state.navTabs.indexOf(tag)
-      store.state.navTabs[i].query = to.query
-      store.state.navTabs[i].fullPath = to.fullPath
-    }
-  }
-}) */
-
-// 最多支持2级菜单
+// 备注：最多支持2级菜单
 const _generateRoute = (menus) => {
   menus.forEach(v1 => {
     if (v1.children.length === 0) {
@@ -124,6 +87,7 @@ const _generateRoute = (menus) => {
         _addRoute(v2, [{ path: '', title: v1.title }, { path: '', title: v2.title }])
         if (v2.children.length > 0) {
           v2.children.forEach(v3 => {
+            // 注册页面按钮级菜单路由
             _addRoute(v3, [{ path: '', title: v1.title }, { path: v2.path + '/index', title: v2.title }, { path: '', title: v3.title }])
           })
         }

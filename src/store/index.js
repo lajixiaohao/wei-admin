@@ -12,8 +12,6 @@ const state = {
   menus: [],
   tagViews: [{ title: '首页', path: '/dashboard', name: 'Dashboard', fullPath: '/dashboard' }],
   cachedViews: ['Dashboard']
-  // tagViews: [{ title: '首页', name: 'Dashboard', path: '/dashboard', fullPath: '/dashboard', query: {} }],
-  // cachedViews: ['Dashboard']
 }
 
 export default new Vuex.Store({
