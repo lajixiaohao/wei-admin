@@ -11,11 +11,12 @@ module.exports = {
   publicPath: './',
   assetsDir: 'static',
   outputDir: 'dist',
-  chainWebpack: (config) => {
+  chainWebpack: config => {
     config.plugin('html').tap((args) => {
       args[0].title = defaultConfigs.webTitle
       return args
     })
+    config.plugins.delete('prefetch')
     config.module
       .rule('svg')
       .exclude
