@@ -8,7 +8,7 @@ function resolve (dir) {
 module.exports = {
   productionSourceMap: false,
   parallel: false,
-  publicPath: '/',
+  publicPath: './',
   assetsDir: 'static',
   outputDir: 'dist',
   chainWebpack: (config) => {
