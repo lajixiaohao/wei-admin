@@ -140,9 +140,7 @@ export default {
             this.loading = false
             this.$message.success(res.msg)
             setToken(res.data.token)
-            this.$router.push(this.redirectPath()).catch(() => {
-              this.$router.push(this.redirectPath())
-            })
+            this.$router.push(this.redirectPath()).catch(() => {})
           }).catch(() => {
             this.loading = false
             this.loginForm.captcha = ''
@@ -155,7 +153,7 @@ export default {
       })
     },
     redirectPath () {
-      return this.$route.query.redirect !== undefined ? this.$route.query.redirect : '/'
+      return (this.$route.query.redirect !== undefined && this.$route.query.redirect.length > 0) ? this.$route.query.redirect : '/dashboard'
     },
     resetForm () {
       this.$refs.loginForm.resetFields()
@@ -172,7 +170,7 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
+<style scoped>
   .bg {
     background-color: #24364c;
     height: inherit;

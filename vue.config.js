@@ -16,6 +16,7 @@ module.exports = {
       args[0].title = defaultConfigs.webTitle
       return args
     })
+    config.plugins.delete('preload')
     config.plugins.delete('prefetch')
     config.module
       .rule('svg')

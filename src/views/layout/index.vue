@@ -182,7 +182,9 @@ export default {
         logout().then(res => {
           this.$message.success(res.msg)
           removeToken()
-          location.reload()
+          setTimeout(() => {
+            window.location.reload()
+          }, 1500)
         })
       }).catch(() => {})
     },
@@ -241,7 +243,7 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
+<style scoped>
   .el-container {
     height: 100%;
     overflow-y: hidden;
@@ -258,34 +260,32 @@ export default {
     line-height: 50px;
     overflow: hidden;
     text-align: center;
-    img {
-      width: 40px;
-      height: 40px;
-      vertical-align: middle;
-      margin-right: 6px;
-      border-radius: 50%;
-    }
-    .system {
-      font-size: 14px;
-      color: #fff;
-      font-weight: 600;
-    }
   }
 
-  .side-menu {
-    .el-menu {
-      border-right: 0;
-    }
+  .side-top img {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+    margin-right: 6px;
+    border-radius: 50%;
   }
 
-  .el-submenu {
-    .el-menu-item {
-      background-color: #1F2D3D !important;
-    }
+  .side-top .system {
+    font-size: 14px;
+    color: #fff;
+    font-weight: 600;
+  }
 
-    .el-menu-item:hover {
-      background-color: #141e2a !important;
-    }
+  .side-menu .el-menu {
+    border-right: 0;
+  }
+
+  .el-submenu .el-menu-item {
+    background-color: #1F2D3D!important;
+  }
+
+  .el-submenu .el-menu-item:hover {
+    background-color: #141e2a!important;
   }
 
   .el-menu-item .svg-icon,
@@ -310,11 +310,12 @@ export default {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    .svg-icon {
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-    }
+  }
+
+  .head-left .svg-icon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
   }
 
   .el-breadcrumb {

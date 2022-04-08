@@ -59,23 +59,28 @@ export function request (config) {
       return res
     }
   }, err => {
-    // 403
-    if (err.response.status === 403) {
+    if (err.response) {
+      if (err.response.status === 403) {
+        Message({
+          message: err.response.data.msg,
+          type: 'error'
+        })
+      }
+      if (err.response.status === 401) {
+        MessageBox.confirm('您的登录状态已失效，您可以继续停留在该页上，或重新登录', '提示', {
+          confirmButtonText: '重新登录',
+          cancelButtonText: '关闭',
+          type: 'warning'
+        }).then(() => {
+          removeToken()
+          window.location.reload()
+        }).catch(() => {})
+      }
+    } else {
       Message({
-        message: err.response.data.msg,
+        message: err.message,
         type: 'error'
       })
-    }
-    // 401
-    if (err.response.status === 401) {
-      MessageBox.confirm('您的登录状态已失效，您可以继续停留在该页上，或重新登录', '提示', {
-        confirmButtonText: '重新登录',
-        cancelButtonText: '关闭',
-        type: 'warning'
-      }).then(() => {
-        removeToken()
-        location.reload()
-      }).catch(() => {})
     }
     return Promise.reject(new Error('Error'))
   })
