@@ -1,24 +1,24 @@
 <template>
   <div>
-    <h4>WangEditor示例</h4>
-    <p>文档：<a href="https://www.wangeditor.com/doc/" target="_blank">www.wangeditor.com/doc</a></p>
-    <Editor :content="content" @editorContent="getEditorContent"></Editor>
+    <h4>wangEditor5示例</h4>
+    <p>官网：<a href="https://www.wangeditor.com/" target="_blank">https://www.wangeditor.com/</a></p>
+    <WangEditor :content="content" @editorContent="getEditorContent" />
   </div>
 </template>
 
 <script>
-import Editor from '@/components/editor'
+import WangEditor from '@/components/WangEditor'
 
 export default {
-  name: 'WangEditor',
+  name: 'WangEditorDemo',
   data () {
     return {
       editor: null,
-      content: '<p>初始化编辑器</p>'
+      content: ''
     }
   },
   components: {
-    Editor
+    WangEditor
   },
   methods: {
     getEditorContent (val) {
