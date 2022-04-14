@@ -11,18 +11,32 @@
         <div class="box-right">
           <el-form :model="loginForm" :rules="rules" ref="loginForm">
             <el-form-item prop="account">
-              <el-input prefix-icon="el-icon-user" v-model.trim="loginForm.account" autocomplete="off" placeholder="账号"
-                clearable />
+              <el-input
+                prefix-icon="el-icon-user"
+                v-model.trim="loginForm.account"
+                placeholder="账号"
+                clearable
+              />
             </el-form-item>
             <el-form-item prop="pwd">
-              <el-input prefix-icon="el-icon-lock" v-model.trim="loginForm.pwd" type="password" autocomplete="off"
-                placeholder="密码" clearable show-password @keyup.enter.native="onSubmit" />
+              <el-input
+                prefix-icon="el-icon-lock"
+                v-model.trim="loginForm.pwd"
+                type="password"
+                placeholder="密码"
+                clearable
+                show-password
+                @keyup.enter.native="onSubmit"
+              />
             </el-form-item>
             <el-form-item prop="captcha">
               <el-col :span="13">
-                <el-input v-model.trim="loginForm.captcha" autocomplete="off" placeholder="验证码" maxlength="3"
+                <el-input
+                  v-model.trim="loginForm.captcha"
+                  placeholder="验证码"
+                  maxlength="3"
                   @keyup.enter.native="onSubmit">
-                  <svg-icon slot="prefix" icon-class="safety" style="margin-left: 5px;"></svg-icon>
+                  <svg-icon slot="prefix" icon-class="safety" style="margin-left: 5px;" />
                 </el-input>
               </el-col>
               <el-col :span="10" :offset="1" style="height: 38px;">
@@ -41,20 +55,10 @@
 </template>
 
 <script>
-import {
-  setToken
-} from '@/common/utils/auth'
-import {
-  validateAccount,
-  validatePassword
-} from '@/common/utils/validate'
-import {
-  login,
-  getCaptcha
-} from '@/common/api/login'
-import {
-  encryptData
-} from '@/common/utils/rsa'
+import { setToken } from '@/common/utils/auth'
+import { validateAccount, validatePassword } from '@/common/utils/validate'
+import { login, getCaptcha } from '@/common/api/login'
+import { encryptData } from '@/common/utils/rsa'
 import Config from '@/settings'
 
 export default {
@@ -88,6 +92,7 @@ export default {
       codeImageUrl: '',
       fit: 'contain',
       uid: '',
+      loading: false,
       rules: {
         account: [{
           required: true,
@@ -119,8 +124,7 @@ export default {
           trigger: 'blur'
         }
         ]
-      },
-      loading: false
+      }
     }
   },
   created () {
@@ -175,7 +179,6 @@ export default {
     background-color: #24364c;
     height: inherit;
   }
-
   .el-row {
     display: flex;
     left: 50%;
@@ -184,12 +187,10 @@ export default {
     width: 840px;
     height: 380px;
   }
-
   .box-left,
   .box-right {
     height: 100%;
   }
-
   .box-left {
     background-color: #008ecfed;
     display: flex;
@@ -198,29 +199,24 @@ export default {
     flex-direction: column;
     color: #e6e6e6;
   }
-
   .welcome {
     font-size: 14px;
   }
-
   .system {
     margin-top: 20px;
     font-size: 18px;
     font-weight: 600;
   }
-
   .box-right {
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #fff;
   }
-
   .loginBtn {
     display: flex;
     justify-content: flex-end;
   }
-
   .el-form {
     width: 70%;
   }
