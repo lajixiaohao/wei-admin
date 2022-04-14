@@ -75,36 +75,59 @@ router.beforeEach((to, from, next) => {
 
 // TODU:需要再优化
 const _generateRoute = (menus) => {
-  menus.forEach(v1 => {
-    if (v1.children.length === 0) {
-      _addRoute(v1, [{ path: '', title: v1.title }])
-      if (v1.pageMenu.length) {
-        v1.pageMenu.forEach(p1 => {
-          _addRoute(p1, [{ path: v1.path + '/index', title: v1.title }, { path: '', title: p1.title }])
-        })
-      }
-    } else {
-      v1.children.forEach(v2 => {
-        if (v2.children.length === 0) {
-          _addRoute(v2, [{ path: '', title: v1.title }, { path: '', title: v2.title }])
-          if (v2.pageMenu.length) {
-            v2.pageMenu.forEach(p2 => {
-              _addRoute(p2, [{ path: '', title: v1.title }, { path: v2.path + '/index', title: v2.title }, { path: '', title: p2.title }])
+  if (menus.length) {
+    menus.forEach(v1 => {
+      if (v1.children.length) {
+        v1.children.forEach(v2 => {
+          if (v2.children.length) {
+            v2.children.forEach(v3 => {
+              _addRoute(v3, [
+                { path: '', title: v1.title },
+                { path: '', title: v2.title },
+                { path: '', title: v3.title }
+              ])
+              if (v3.pageMenu.length) {
+                v3.pageMenu.forEach(p3 => {
+                  _addRoute(p3, [
+                    { path: '', title: v1.title },
+                    { path: '', title: v2.title },
+                    { path: v3.path + '/index', title: v3.title },
+                    { path: '', title: p3.title }
+                  ])
+                })
+              }
             })
-          }
-        } else {
-          v2.children.forEach(v3 => {
-            _addRoute(v3, [{ path: '', title: v1.title }, { path: '', title: v2.title }, { path: '', title: v3.title }])
-            if (v3.pageMenu.length) {
-              v3.pageMenu.forEach(p3 => {
-                _addRoute(p3, [{ path: '', title: v1.title }, { path: '', title: v2.title }, { path: v3.path + '/index', title: v3.title }, { path: '', title: p3.title }])
+          } else {
+            _addRoute(v2, [
+              { path: '', title: v1.title },
+              { path: '', title: v2.title }
+            ])
+            if (v2.pageMenu.length) {
+              v2.pageMenu.forEach(p2 => {
+                _addRoute(p2, [
+                  { path: '', title: v1.title },
+                  { path: v2.path + '/index', title: v2.title },
+                  { path: '', title: p2.title }
+                ])
               })
             }
+          }
+        })
+      } else {
+        _addRoute(v1, [
+          { path: '', title: v1.title }
+        ])
+        if (v1.pageMenu.length) {
+          v1.pageMenu.forEach(p1 => {
+            _addRoute(p1, [
+              { path: v1.path + '/index', title: v1.title },
+              { path: '', title: p1.title }
+            ])
           })
         }
-      })
-    }
-  })
+      }
+    })
+  }
 
   router.addRoute({
     path: '*',

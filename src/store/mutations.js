@@ -57,5 +57,13 @@ export default {
     state.tagViews = state.tagViews.filter(v => {
       return v.name === 'Dashboard' || v.path === tag.path
     })
+  },
+  UPDATE_NAV_TITLE (state, data) {
+    state.tagViews = state.tagViews.map((item) => {
+      if (item.path === data.path) {
+        item.title = data.title
+      }
+      return item
+    })
   }
 }

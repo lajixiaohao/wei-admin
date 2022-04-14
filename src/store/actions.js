@@ -26,5 +26,8 @@ export default {
   },
   deleteOtherView ({ commit }, tag) {
     commit('DELETE_OTHER_VIEW', tag)
+  },
+  updateNavTitle ({ commit }, data) {
+    commit('UPDATE_NAV_TITLE', data)
   }
 }

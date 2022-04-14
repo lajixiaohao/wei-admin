@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside :width="isCollapse ? '64px' : '216px'">
+    <el-aside :width="isCollapse ? '64px' : '220px'">
       <div class="side-top">
         <img src="@/assets/images/nazha.gif">
         <span v-show="!isCollapse" class="system">{{ webAbbreviation }}</span>
