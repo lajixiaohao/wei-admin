@@ -2,12 +2,12 @@
   <div>
     <el-descriptions :column="1" :size="size" border>
       <el-descriptions-item label="登录账号">{{ profile.account }}</el-descriptions-item>
-      <el-descriptions-item label="姓名/昵称">{{ profile.true_name }}</el-descriptions-item>
+      <el-descriptions-item label="姓名/昵称">{{ profile.trueName }}</el-descriptions-item>
       <el-descriptions-item label="上级管理员">{{ profile.superior }}</el-descriptions-item>
-      <el-descriptions-item label="所属角色">{{ profile.role_name }}</el-descriptions-item>
-      <el-descriptions-item label="所属部门">{{ profile.department }}</el-descriptions-item>
+      <el-descriptions-item label="所属角色">{{ profile.role }}</el-descriptions-item>
+      <el-descriptions-item label="所属部门">{{ profile.dept }}</el-descriptions-item>
       <el-descriptions-item label="岗位">{{ profile.post }}</el-descriptions-item>
-      <el-descriptions-item label="注册时间">{{ profile.created_at }}</el-descriptions-item>
+      <el-descriptions-item label="注册时间">{{ profile.createdAt }}</el-descriptions-item>
     </el-descriptions>
     <p>
       <el-button type="primary" size="mini" icon='el-icon-edit-outline' @click="editName()">修改姓名</el-button>
@@ -17,21 +17,10 @@
 </template>
 
 <script>
-import {
-  getProfileData,
-  modifyName,
-  modifyPassword
-} from '@/common/api/profile'
-import {
-  validateTrueName,
-  validatePassword
-} from '@/common/utils/validate'
-import {
-  encryptData
-} from '@/common/utils/rsa'
-import {
-  removeToken
-} from '@/common/utils/auth'
+import { getProfileData, modifyName, modifyPassword } from '@/common/api/public'
+import { validateTrueName, validatePassword } from '@/common/utils/validate'
+import { encryptData } from '@/common/utils/rsa'
+import { removeToken } from '@/common/utils/auth'
 
 export default {
   name: 'Profile',
@@ -40,11 +29,11 @@ export default {
       size: 'medium',
       profile: {
         account: '',
-        true_name: '',
+        trueName: '',
         superior: '',
-        created_at: '',
-        role_name: '',
-        department: '',
+        createdAt: '',
+        role: '',
+        dept: '',
         post: ''
       }
     }
@@ -64,20 +53,20 @@ export default {
         cancelButtonText: '取消',
         inputValidator: validateTrueName,
         inputErrorMessage: '长度应在2~20个字符内',
-        inputValue: this.profile.true_name,
+        inputValue: this.profile.trueName,
         closeOnClickModal: false
       }).then(({
         value
       }) => {
-        if (value === this.profile.true_name) {
+        if (value === this.profile.trueName) {
           this.$message.success('本次未作任何更改')
         } else {
           modifyName({
             name: value
           }).then(res => {
             this.$message.success(res.msg)
-            this.getData()
-            this.$store.state.account = value
+            this.$store.dispatch('updateAdminName', value)
+            this.profile.trueName = value
           })
         }
       }).catch(() => {})
@@ -112,7 +101,6 @@ export default {
   p {
     font-size: 14px;
   }
-
   .el-descriptions {
     max-width: 400px;
   }

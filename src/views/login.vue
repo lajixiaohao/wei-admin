@@ -57,7 +57,7 @@
 <script>
 import { setToken } from '@/common/utils/auth'
 import { validateAccount, validatePassword } from '@/common/utils/validate'
-import { login, getCaptcha } from '@/common/api/login'
+import { login, getCaptcha } from '@/common/api/public'
 import { encryptData } from '@/common/utils/rsa'
 import Config from '@/settings'
 

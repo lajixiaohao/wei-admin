@@ -8,13 +8,14 @@ import getters from './getters.js'
 Vue.use(Vuex)
 
 const state = {
-  account: '',
+  userInfo: [],
   menus: [],
-  tagViews: [{ title: '首页', path: '/dashboard', name: 'Dashboard', fullPath: '/dashboard' }],
+  tagViews: [{ title: '首页', path: '/dashboard', fullPath: '/dashboard', name: 'Dashboard' }],
   cachedViews: ['Dashboard']
 }
 
 export default new Vuex.Store({
+  strict: process.env.NODE_ENV !== 'production',
   state,
   mutations,
   actions,

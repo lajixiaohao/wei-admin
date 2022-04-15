@@ -1,24 +1,13 @@
 import axios from 'axios'
-import {
-  Message,
-  MessageBox
-} from 'element-ui'
-import {
-  getToken,
-  removeToken
-} from '@/common/utils/auth'
+import { Message, MessageBox } from 'element-ui'
+import { getToken, removeToken } from '@/common/utils/auth'
 
-/**
- * 网络请求
- * @param {Object} config
- */
 export function request (config) {
   const instance = axios.create({
     baseURL: process.env.VUE_APP_BASE_API,
-    timeout: 10000
+    timeout: 5000
   })
 
-  // 请求前拦截
   instance.interceptors.request.use(config => {
     if (getToken()) {
       config.headers.Token = getToken()
@@ -28,9 +17,7 @@ export function request (config) {
     return err
   })
 
-  // 响应后拦截
   instance.interceptors.response.use(response => {
-    // 支持文件流下载
     if (response.data instanceof Blob) {
       const filename = response.headers['content-disposition'].split('filename=')[1]
       const blob = new Blob([response.data], { type: 'application/octet-stream' })
@@ -48,12 +35,8 @@ export function request (config) {
       window.URL.revokeObjectURL(blobURL)
     } else {
       const res = response.data
-      // code=1，表示请求未按预期完成，将统一展示错误消息
       if (res.code !== 0) {
-        Message({
-          message: res.msg,
-          type: 'error'
-        })
+        Message({ message: res.msg, type: 'error' })
         return Promise.reject(new Error(res.msg || 'Error'))
       }
       return res
@@ -61,12 +44,8 @@ export function request (config) {
   }, err => {
     if (err.response) {
       if (err.response.status === 403) {
-        Message({
-          message: err.response.data.msg,
-          type: 'error'
-        })
-      }
-      if (err.response.status === 401) {
+        Message({ message: err.response.data.msg, type: 'error' })
+      } else if (err.response.status === 401) {
         MessageBox.confirm('您的登录状态已失效，您可以继续停留在该页上，或重新登录', '提示', {
           confirmButtonText: '重新登录',
           cancelButtonText: '关闭',
@@ -75,14 +54,13 @@ export function request (config) {
           removeToken()
           window.location.reload()
         }).catch(() => {})
+      } else {
+        Message({ message: err.message, type: 'error' })
       }
-    } else {
-      Message({
-        message: err.message,
-        type: 'error'
-      })
+      return Promise.reject(err)
     }
-    return Promise.reject(new Error('Error'))
+    Message({ message: err.message, type: 'error' })
+    return Promise.reject(err)
   })
 
   return instance(config)

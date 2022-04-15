@@ -1,6 +1,6 @@
 export default {
   INIT_DATA (state, data) {
-    state.account = data.account
+    state.userInfo = data.userInfo
     state.menus = data.menus
   },
   ADD_TAG_VIEW (state, view) {
@@ -15,7 +15,13 @@ export default {
       return false
     })
     if (!isExists) {
-      state.tagViews.push(Object.assign({}, view, { title: view.meta.title || 'no-title' }))
+      state.tagViews.push({
+        title: view.meta.title || 'no-title',
+        name: view.name,
+        path: view.path,
+        fullPath: view.fullPath,
+        query: view.query
+      })
     }
     if (isExists && originiFullPath !== view.fullPath) {
       const i = state.tagViews.indexOf(tag)
@@ -58,12 +64,7 @@ export default {
       return v.name === 'Dashboard' || v.path === tag.path
     })
   },
-  UPDATE_NAV_TITLE (state, data) {
-    state.tagViews = state.tagViews.map((item) => {
-      if (item.path === data.path) {
-        item.title = data.title
-      }
-      return item
-    })
+  UPDATE_ADMIN_NAME (state, name) {
+    state.userInfo.trueName = name
   }
 }

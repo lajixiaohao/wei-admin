@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import { getToken } from '@/common/utils/auth'
 import Layout from '@/views/layout/index'
 import store from '@/store'
-import { initialize } from '@/common/api/initialize'
+import { initialize } from '@/common/api/public'
 
 Vue.use(VueRouter)
 
@@ -56,7 +56,7 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       return next('/')
     } else {
-      if (store.state.account.length === 0) {
+      if (store.state.userInfo.length === 0) {
         initialize().then(res => {
           store.dispatch('initData', res.data)
           _generateRoute(res.data.menus)

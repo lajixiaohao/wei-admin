@@ -2,14 +2,8 @@ export default {
   initData ({ commit }, data) {
     commit('INIT_DATA', data)
   },
-  addView ({ dispatch }, view) {
-    dispatch('addTagView', view)
-    dispatch('addCachedView', view)
-  },
-  addTagView ({ commit }, view) {
+  addView ({ commit }, view) {
     commit('ADD_TAG_VIEW', view)
-  },
-  addCachedView ({ commit }, view) {
     commit('ADD_CACHED_VIEW', view)
   },
   refreshView ({ commit }, name) {
@@ -27,7 +21,7 @@ export default {
   deleteOtherView ({ commit }, tag) {
     commit('DELETE_OTHER_VIEW', tag)
   },
-  updateNavTitle ({ commit }, data) {
-    commit('UPDATE_NAV_TITLE', data)
+  updateAdminName ({ commit }, name) {
+    commit('UPDATE_ADMIN_NAME', name)
   }
 }

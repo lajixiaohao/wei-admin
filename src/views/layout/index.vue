@@ -19,7 +19,7 @@
             <svg-icon icon-class="home" />
             <span slot="title">首页</span>
           </el-menu-item>
-          <template v-for="v1 in getMenu">
+          <template v-for="v1 in menus">
             <template v-if="v1.children.length">
               <el-submenu :index="v1.id+''" :key="v1.id">
                 <template slot="title">
@@ -79,20 +79,20 @@
           <div>
             <el-dropdown trigger="click" size="medium" @command="handleCommand">
               <span class="el-dropdown-link">
-                {{ getAccount }}<i class="el-icon-caret-bottom el-icon--right"></i>
+                {{ adminName }}<i class="el-icon-caret-bottom el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="profile">个人资料</el-dropdown-item>
-                <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+                <el-dropdown-item command="quit">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
         </div>
         <div class="tags-view">
           <router-link
-            v-for="tag in getTagView"
+            v-for="tag in tagViews"
             :key="tag.path"
-            :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
+            :to="{ path: tag.path, query: tag.query }"
             :class="{active: isActive(tag.path)}"
             class="tags-view-item"
             @click.middle.native="closeSelectedTag(tag)"
@@ -110,7 +110,7 @@
       </el-header>
       <el-main>
         <transition name="slide-fade" mode="out-in">
-          <keep-alive :include="getCachedView">
+          <keep-alive :include="cachedViews">
             <router-view />
           </keep-alive>
         </transition>
@@ -122,8 +122,9 @@
 
 <script>
 import { removeToken } from '@/common/utils/auth'
-import { logout } from '@/common/api/logout'
+import { logout } from '@/common/api/public'
 import Config from '@/settings'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Layout',
@@ -138,20 +139,14 @@ export default {
     }
   },
   computed: {
-    getAccount () {
-      return this.$store.state.account
-    },
+    ...mapGetters([
+      'adminName',
+      'menus',
+      'tagViews',
+      'cachedViews'
+    ]),
     getBreadcrumb () {
       return this.$route.meta.breadcrumb || []
-    },
-    getMenu () {
-      return this.$store.state.menus
-    },
-    getTagView () {
-      return this.$store.state.tagViews
-    },
-    getCachedView () {
-      return this.$store.state.cachedViews
     },
     activeNav () {
       if (this.$route.meta.breadcrumb !== undefined) {
@@ -163,7 +158,7 @@ export default {
       }
       return this.$route.path
     },
-    footerData: () => {
+    footerData () {
       const date = new Date()
       const startYear = Config.startYear
       const toYear = date.getFullYear()
@@ -193,7 +188,7 @@ export default {
       if (name && !noCachedViews.includes(name)) {
         this.$store.dispatch('addView', this.$route)
       }
-      return false
+      return true
     },
     handleCommand (command) {
       if (command === 'profile') {
@@ -201,11 +196,11 @@ export default {
           this.$router.push('/profile')
         }
       }
-      if (command === 'logout') {
-        this.logout()
+      if (command === 'quit') {
+        this.quit()
       }
     },
-    logout () {
+    quit () {
       this.$confirm('确定注销并退出系统吗？', '提示', {
         confirmButtonText: '是的',
         cancelButtonText: '再想想',
@@ -213,12 +208,17 @@ export default {
       }).then(() => {
         logout().then(res => {
           this.$message.success(res.msg)
-          removeToken()
-          setTimeout(() => {
-            window.location.reload()
-          }, 1500)
+          this.pageReload()
+        }).catch(() => {
+          this.pageReload()
         })
       }).catch(() => {})
+    },
+    pageReload () {
+      removeToken()
+      setTimeout(() => {
+        window.location.reload()
+      }, 1500)
     },
     isActive (path) {
       return this.$route.path === path
@@ -234,16 +234,16 @@ export default {
       this.visible = false
     },
     closeSelectedTag (tag) {
-      const i = this.getCachedView.indexOf(tag.name)
+      const i = this.cachedViews.indexOf(tag.name)
       if (i > 0) {
         this.$store.dispatch('deleteCachedView', i)
       }
 
-      const j = this.getTagView.indexOf(tag)
+      const j = this.tagViews.indexOf(tag)
       if (j > 0) {
         this.$store.dispatch('deleteTagView', j).then(() => {
           if (this.isActive(tag.path)) {
-            this.$router.push(this.getTagView[(j - 1)].fullPath)
+            this.$router.push(this.tagViews[(j - 1)].fullPath)
           }
         })
       }
