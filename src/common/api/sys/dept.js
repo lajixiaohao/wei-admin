@@ -15,3 +15,11 @@ export function addOrEdit (data) {
     data
   })
 }
+
+export function remove (data) {
+  return request({
+    url: 'dept/remove',
+    method: 'post',
+    data
+  })
+}

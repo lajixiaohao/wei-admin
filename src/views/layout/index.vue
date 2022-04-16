@@ -5,7 +5,7 @@
         <img src="@/assets/images/nazha.gif">
         <span v-show="!isCollapse" class="system">{{ webAbbreviation }}</span>
       </div>
-      <div>
+      <div class="side-menu">
         <el-menu
           background-color="#304156"
           text-color="#bfcbd9"
@@ -303,6 +303,9 @@ export default {
     color: #fff;
     font-weight: 600;
   }
+  .side-menu .el-menu {
+    border-right: 0;
+  }
   .el-submenu .el-menu-item {
     background-color: #1F2D3D!important;
   }
@@ -386,14 +389,14 @@ export default {
     border-radius: 50%;
     margin-right: 3px;
   }
-  .el-icon-close {
+  .tags-view .el-icon-close {
     border-radius: 50%;
     width: 16px;
     height: 16px;
     text-align: center;
     line-height: 16px;
   }
-  .el-icon-close:hover {
+  .tags-view .el-icon-close:hover {
     background-color: #ff6666;
     color: #fff;
   }
