@@ -1,8 +1,11 @@
 <template>
-  <div>menu</div>
+  <div>rsa</div>
 </template>
 
 <script>
+export default {
+  name: 'RsaDemo'
+}
 </script>
 
 <style>

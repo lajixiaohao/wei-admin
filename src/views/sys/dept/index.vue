@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { getDeptData, addOrEdit, remove } from '@/common/api/sys/dept'
+import { getTreeData, addOrEdit, remove } from '@/common/api/sys/dept'
 
 export default {
   name: 'Dept',
@@ -80,7 +80,7 @@ export default {
       }
     },
     loadNodeData (id, resolve) {
-      getDeptData({ parentId: id }).then(res => {
+      getTreeData({ parentId: id }).then(res => {
         if (id === 0) {
           this.deptNum = res.data.deptNum
         }

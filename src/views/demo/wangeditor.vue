@@ -1,10 +1,10 @@
 <template>
-  <div>Role</div>
+  <div>WangEditorDemo</div>
 </template>
 
 <script>
 export default {
-  name: 'Role'
+  name: 'WangEditorDemo'
 }
 </script>
 

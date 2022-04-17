@@ -1,8 +1,8 @@
 import { request } from '@/common/utils/request'
 
-export function getDeptData (param) {
+export function getTreeData (param) {
   return request({
-    url: 'dept/get',
+    url: 'dept/tree',
     method: 'get',
     params: param
   })
