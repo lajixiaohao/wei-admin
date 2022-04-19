@@ -37,9 +37,9 @@ import {
   Link,
   Descriptions,
   DescriptionsItem,
-  Cascader,
   CheckboxGroup,
-  Checkbox
+  Checkbox,
+  Cascader
 } from 'element-ui'
 
 Vue.use(Button)
@@ -77,9 +77,9 @@ Vue.use(Radio)
 Vue.use(Link)
 Vue.use(Descriptions)
 Vue.use(DescriptionsItem)
-Vue.use(Cascader)
 Vue.use(CheckboxGroup)
 Vue.use(Checkbox)
+Vue.use(Cascader)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

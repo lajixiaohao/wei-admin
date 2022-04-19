@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { getTreeData } from '@/common/api/sys/menu'
+import { getTreeData, remove } from '@/common/api/sys/menu'
 
 export default {
   name: 'Menu',
@@ -49,6 +49,7 @@ export default {
       })
     },
     addMenu () {
+      this.$router.push('/sys/menu/add-or-edit')
     },
     edit (node, data) {
       //
@@ -57,7 +58,20 @@ export default {
       //
     },
     remove (node, data) {
-      //
+      this.node = node.parent
+      const msg = data.type === 3 ? '权限' : '菜单'
+      this.$confirm('确定删除' + msg + '：“' + data.title + '”？若下级存在也将一并删除', '提示', {
+        confirmButtonText: '是的',
+        cancelButtonText: '再想想',
+        type: 'warning'
+      }).then(() => {
+        remove({ id: data.id }).then(res => {
+          this.$message.success(res.msg)
+          const node = this.$refs.menuTree.getNode(this.node)
+          node.loaded = false
+          node.expand()
+        })
+      }).catch(() => {})
     },
     menuType (type) {
       if (type === 2) {

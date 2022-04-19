@@ -7,3 +7,19 @@ export function getTreeData (param) {
     params: param
   })
 }
+
+export function remove (data) {
+  return request({
+    url: 'menu/remove',
+    method: 'post',
+    data
+  })
+}
+
+export function addOrEdit (data) {
+  return request({
+    url: 'menu/' + (data.id > 0 ? 'edit' : 'add'),
+    method: 'post',
+    data
+  })
+}
