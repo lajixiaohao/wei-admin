@@ -7,7 +7,7 @@
     <el-tree ref="menuTree" node-key="id" :props="props" :load="loadNode" lazy>
       <div class="custom-tree-node" slot-scope="{ node, data }">
         <div>
-          <el-tooltip v-if="data.type !== 3 && !data.isShow" class="item" effect="dark" content="客户端不显示" placement="right">
+          <el-tooltip v-if="data.type !== 3 && !data.isShow" class="item" effect="dark" content="菜单不可见" placement="right">
             <span class="inactive">{{ menuType(data.type) }}{{ node.label }}</span>
           </el-tooltip>
           <span v-else>{{ menuType(data.type) }}{{ node.label }}</span>
@@ -55,11 +55,11 @@ export default {
       if (data.type !== 3) {
         this.$router.push('/sys/menu/add-or-edit?id=' + data.id)
       } else {
-        this.$router.push('/sys/menu/add-or-edit-permission?id=' + data.id)
+        this.$router.push('/sys/menu/permission?id=' + data.id)
       }
     },
     addPermission () {
-      this.$router.push('/sys/menu/add-or-edit-permission')
+      this.$router.push('/sys/menu/permission')
     },
     remove (node, data) {
       this.node = node.parent
@@ -79,7 +79,7 @@ export default {
     },
     menuType (type) {
       if (type === 2) {
-        return '【隐式菜单】'
+        return '【页面菜单】'
       }
       if (type === 3) {
         return '【权限】'

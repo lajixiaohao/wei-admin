@@ -3,10 +3,10 @@
     <el-form :model="form" :rules="rules" ref="menuForm" label-width="100px">
       <el-form-item label="菜单类型" prop="type" v-if="!form.id">
         <el-select v-model="form.type" placeholder="请选择菜单类型" @change="setCheckStrictly">
-          <el-option label="显示菜单" :value="1"></el-option>
-          <el-option label="隐式菜单" :value="2"></el-option>
+          <el-option label="左侧菜单" :value="1"></el-option>
+          <el-option label="页面菜单" :value="2"></el-option>
         </el-select>
-        <span class="form-tips">隐式菜单不会在左侧菜单栏展示。优先级：显示 > 隐式</span>
+        <span class="form-tips">优先级：左侧菜单 > 页面菜单</span>
       </el-form-item>
       <el-form-item label="上级菜单" prop="parentId" v-if="!form.id">
         <el-cascader
@@ -21,8 +21,8 @@
       <el-form-item label="菜单名称" prop="title">
         <el-input v-model="form.title" placeholder="请输入菜单名称" clearable />
       </el-form-item>
-      <el-form-item label="页面路径" prop="path">
-        <el-input v-model="form.path" placeholder="请输入页面路径" clearable />
+      <el-form-item label="路由地址" prop="path">
+        <el-input v-model="form.path" placeholder="请输入路由地址" clearable />
         <span class="form-tips">请以“/”开头</span>
       </el-form-item>
       <el-form-item label="组件名称" prop="componentName">
@@ -40,11 +40,11 @@
         </el-input>
         <span class="form-tips">请使用svg图标，位于/src/assets/svg目录下</span>
       </el-form-item>
-      <el-form-item label="是否显示" prop="isShow">
+      <el-form-item label="菜单可见" prop="isShow">
         <el-radio v-model="form.isShow" :label="1">是</el-radio>
         <el-radio v-model="form.isShow" :label="0">否</el-radio>
       </el-form-item>
-      <el-form-item label="是否缓存组件" prop="isCache">
+      <el-form-item label="组件缓存" prop="isCache">
         <el-radio v-model="form.isCache" :label="1">是</el-radio>
         <el-radio v-model="form.isCache" :label="0">否</el-radio>
       </el-form-item>

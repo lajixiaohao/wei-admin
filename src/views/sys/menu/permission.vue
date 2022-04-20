@@ -32,7 +32,7 @@
 import { addOrEditPermission } from '@/common/api/sys/menu'
 
 export default {
-  name: 'AddOrEditPermission',
+  name: 'Permission',
   data () {
     return {
       loading: false,
@@ -51,7 +51,9 @@ export default {
         sort: 1
       },
       rules: {
-        title: [{ required: true, message: '请输入权限名称', trigger: 'blur' }]
+        title: [{ required: true, message: '请输入权限名称', trigger: 'blur' }],
+        path: [{ required: true, message: '请输入权限标识', trigger: 'blur' }],
+        parentId: [{ required: true, message: '请选择上级菜单', trigger: 'blur' }]
       }
     }
   },
@@ -74,27 +76,15 @@ export default {
     submitForm () {
       this.$refs.menuForm.validate((valid) => {
         if (valid) {
-          // 选中菜单数
-          // const l = this.form.parentId.length
-          // // 顶级菜单不能为隐式菜单
-          // if (l === 0 && this.form.type === 2) {
-          //   this.$message.error('顶级菜单不能为隐式菜单')
-          //   return false
-          // }
-          // // 显示菜单最多只支持到3级
-          // if (l === 3 && this.form.type === 1) {
-          //   this.$message.error('显示菜单最多只支持到三级')
-          //   return false
-          // }
-          // this.loading = true
-          // addOrEditPermission(this.form).then(res => {
-          //   this.$message.success(res.msg)
-          //   this.loading = false
-          //   this.resetForm()
-          //   this.init()
-          // }).catch(() => {
-          //   this.loading = false
-          // })
+          this.loading = true
+          addOrEditPermission(this.form).then(res => {
+            this.$message.success(res.msg)
+            this.loading = false
+            this.resetForm()
+            this.init()
+          }).catch(() => {
+            this.loading = false
+          })
         }
       })
     },
