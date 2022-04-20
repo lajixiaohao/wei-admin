@@ -52,10 +52,14 @@ export default {
       this.$router.push('/sys/menu/add-or-edit')
     },
     edit (node, data) {
-      //
+      if (data.type !== 3) {
+        this.$router.push('/sys/menu/add-or-edit?id=' + data.id)
+      } else {
+        this.$router.push('/sys/menu/add-or-edit-permission?id=' + data.id)
+      }
     },
     addPermission () {
-      //
+      this.$router.push('/sys/menu/add-or-edit-permission')
     },
     remove (node, data) {
       this.node = node.parent

@@ -1,14 +1,22 @@
 <template>
   <div>
     <el-form :model="form" :rules="rules" ref="menuForm" label-width="100px">
-      <el-form-item label="上级菜单" prop="parentId">
-      </el-form-item>
-      <el-form-item label="菜单类型" prop="type">
-        <el-select v-model="form.type" placeholder="请选择菜单类型">
+      <el-form-item label="菜单类型" prop="type" v-if="!form.id">
+        <el-select v-model="form.type" placeholder="请选择菜单类型" @change="setCheckStrictly">
           <el-option label="显示菜单" :value="1"></el-option>
           <el-option label="隐式菜单" :value="2"></el-option>
         </el-select>
-        <span class="form-tips">提示：隐式菜单，即页面级菜单，不会在左侧菜单栏展示</span>
+        <span class="form-tips">隐式菜单不会在左侧菜单栏展示。优先级：显示 > 隐式</span>
+      </el-form-item>
+      <el-form-item label="上级菜单" prop="parentId" v-if="!form.id">
+        <el-cascader
+          v-model="form.parentId"
+          :options="menuData"
+          :props="props"
+          clearable
+          filterable
+        />
+        <span class="form-tips">不选择，则默认为顶级</span>
       </el-form-item>
       <el-form-item label="菜单名称" prop="title">
         <el-input v-model="form.title" placeholder="请输入菜单名称" clearable />
@@ -60,9 +68,15 @@ export default {
     return {
       loading: false,
       menuData: [],
+      props: {
+        checkStrictly: false,
+        value: 'id',
+        label: 'title',
+        children: 'children'
+      },
       form: {
         id: 0,
-        parentId: 0,
+        parentId: [],
         title: '',
         path: '',
         type: '',
@@ -85,27 +99,44 @@ export default {
   },
   methods: {
     init () {
-      addOrEdit({ init: 1 }).then(res => {
-        this.menuData = res.data
+      addOrEdit({ init: 1, id: this.form.id }).then(res => {
+        // 编辑
+        if (this.form.id) {
+          this.form = res.data
+        } else {
+          // 添加
+          this.menuData = res.data
+        }
       })
+    },
+    setCheckStrictly (v) {
+      this.props.checkStrictly = v === 1
+      this.form.parentId = []
     },
     submitForm () {
       this.$refs.menuForm.validate((valid) => {
         if (valid) {
-          if (this.level === 3 && this.form.type === 1) {
-            this.$message.error('最多只支持到3级菜单')
+          // 选中菜单数
+          const l = this.form.parentId.length
+          // 顶级菜单不能为隐式菜单
+          if (l === 0 && this.form.type === 2) {
+            this.$message.error('顶级菜单不能为隐式菜单')
             return false
           }
-          console.log(this.form)
-          // this.loading = true
-          // addOrEdit(this.form).then(res => {
-          //   this.$message.success(res.msg)
-          //   this.loading = false
-          //   this.resetForm()
-          //   this.init()
-          // }).catch(() => {
-          //   this.loading = false
-          // })
+          // 显示菜单最多只支持到3级
+          if (l === 3 && this.form.type === 1) {
+            this.$message.error('显示菜单最多只支持到三级')
+            return false
+          }
+          this.loading = true
+          addOrEdit(this.form).then(res => {
+            this.$message.success(res.msg)
+            this.loading = false
+            this.resetForm()
+            this.init()
+          }).catch(() => {
+            this.loading = false
+          })
         }
       })
     },
@@ -119,10 +150,5 @@ export default {
 <style scoped>
   .el-form {
     max-width: 440px;
-  }
-  .el-tree {
-    border: 1px solid #E4E7ED;
-    margin-top: 6px;
-    border-radius: 4px;
   }
 </style>

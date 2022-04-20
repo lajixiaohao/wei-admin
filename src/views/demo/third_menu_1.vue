@@ -1,10 +1,10 @@
 <template>
-  <div>我是三级菜单</div>
+  <div>我是多级菜单1</div>
 </template>
 
 <script>
 export default {
-  name: 'ThirdMenu'
+  name: 'ThirdMenuOne'
 }
 </script>
 

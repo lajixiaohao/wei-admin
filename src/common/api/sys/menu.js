@@ -23,3 +23,11 @@ export function addOrEdit (data) {
     data
   })
 }
+
+export function addOrEditPermission (data) {
+  return request({
+    url: 'menu/permission/' + (data.id > 0 ? 'edit' : 'add'),
+    method: 'post',
+    data
+  })
+}
