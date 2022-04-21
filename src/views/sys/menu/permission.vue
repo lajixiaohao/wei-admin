@@ -1,13 +1,15 @@
 <template>
   <div>
     <el-form :model="form" :rules="rules" ref="menuForm" label-width="100px">
-      <el-form-item label="上级菜单" prop="parentId" v-if="!form.id">
+      <el-form-item label="上级菜单" prop="parentId">
         <el-cascader
-          v-model="form.parentId"
+          v-model="parentIds"
           :options="menuData"
           :props="props"
           clearable
           filterable
+          @change="cascaderChange"
+          :disabled="disabled"
         />
       </el-form-item>
       <el-form-item label="权限名称" prop="title">
@@ -22,7 +24,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm" :loading="loading">立即提交</el-button>
-        <el-button @click="resetForm">重置</el-button>
+        <el-button @click="resetForm" :disabled="disabled">重置</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -34,9 +36,17 @@ import { addOrEditPermission } from '@/common/api/sys/menu'
 export default {
   name: 'Permission',
   data () {
+    const parentId = (rule, value, callback) => {
+      if (parseInt(value) <= 0) {
+        callback(new Error('请选择上级菜单'))
+      }
+      callback()
+    }
     return {
       loading: false,
       menuData: [],
+      parentIds: [],
+      disabled: false,
       props: {
         checkStrictly: false,
         value: 'id',
@@ -45,7 +55,7 @@ export default {
       },
       form: {
         id: 0,
-        parentId: [],
+        parentId: 0,
         title: '',
         path: '',
         sort: 1
@@ -53,7 +63,10 @@ export default {
       rules: {
         title: [{ required: true, message: '请输入权限名称', trigger: 'blur' }],
         path: [{ required: true, message: '请输入权限标识', trigger: 'blur' }],
-        parentId: [{ required: true, message: '请选择上级菜单', trigger: 'blur' }]
+        parentId: [
+          { required: true, message: '请选择上级菜单', trigger: 'blur' },
+          { validator: parentId, trigger: 'blur' }
+        ]
       }
     }
   },
@@ -63,15 +76,20 @@ export default {
   },
   methods: {
     init () {
-      addOrEditPermission({ init: 1, id: this.form.id }).then(res => {
-        // 编辑
+      addOrEditPermission({
+        init: true,
+        id: this.form.id
+      }).then(res => {
+        this.menuData = res.data.menu
         if (this.form.id) {
-          this.form = res.data
-        } else {
-          // 添加
-          this.menuData = res.data
+          this.disabled = true
+          this.form = res.data.info
+          this.parentIds = res.data.parentIds
         }
       })
+    },
+    cascaderChange (v) {
+      this.form.parentId = v[v.length - 1]
     },
     submitForm () {
       this.$refs.menuForm.validate((valid) => {
