@@ -1,22 +1,29 @@
 <template>
   <div>
     <el-form :model="form" :rules="rules" ref="menuForm" label-width="100px">
-      <el-form-item label="菜单类型" prop="type" v-if="!form.id">
-        <el-select v-model="form.type" placeholder="请选择菜单类型" @change="setCheckStrictly">
+      <el-form-item label="菜单类型" prop="type">
+        <el-select
+          v-model="form.type"
+          placeholder="请选择菜单类型"
+          @change="setCheckStrictly"
+          :disabled="disabled"
+        >
           <el-option label="左侧菜单" :value="1"></el-option>
-          <el-option label="页面菜单" :value="2"></el-option>
+          <el-option label="隐式菜单" :value="2"></el-option>
         </el-select>
-        <span class="form-tips">优先级：左侧菜单 > 页面菜单</span>
+        <span class="form-tips">优先级：左侧菜单 > 隐式菜单</span>
       </el-form-item>
-      <el-form-item label="上级菜单" prop="parentId" v-if="!form.id">
+      <el-form-item label="上级菜单" prop="parentId">
         <el-cascader
-          v-model="form.parentId"
+          v-model="parentIds"
           :options="menuData"
           :props="props"
+          @change="cascaderChange"
+          :disabled="disabled"
+          placeholder="默认顶级"
           clearable
           filterable
         />
-        <span class="form-tips">不选择，则默认为顶级</span>
       </el-form-item>
       <el-form-item label="菜单名称" prop="title">
         <el-input v-model="form.title" placeholder="请输入菜单名称" clearable />
@@ -53,7 +60,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm" :loading="loading">立即提交</el-button>
-        <el-button @click="resetForm">重置</el-button>
+        <el-button @click="resetForm" :disabled="disabled">重置</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -68,6 +75,8 @@ export default {
     return {
       loading: false,
       menuData: [],
+      parentIds: [47],
+      disabled: false,
       props: {
         checkStrictly: false,
         value: 'id',
@@ -76,7 +85,7 @@ export default {
       },
       form: {
         id: 0,
-        parentId: [],
+        parentId: 0,
         title: '',
         path: '',
         type: '',
@@ -99,35 +108,30 @@ export default {
   },
   methods: {
     init () {
-      addOrEdit({ init: 1, id: this.form.id }).then(res => {
-        // 编辑
+      addOrEdit({
+        init: true,
+        id: this.form.id
+      }).then(res => {
+        this.menuData = res.data.menu
         if (this.form.id) {
-          this.form = res.data
-        } else {
-          // 添加
-          this.menuData = res.data
+          this.disabled = true
+          this.form = res.data.info
+          this.parentIds = res.data.parentIds
+          this.props.checkStrictly = res.data.info.type === 1
         }
       })
     },
+    cascaderChange (v) {
+      this.form.parentId = v.length > 0 ? v[v.length - 1] : 0
+    },
     setCheckStrictly (v) {
       this.props.checkStrictly = v === 1
-      this.form.parentId = []
+      this.parentIds = []
+      this.form.parentId = 0
     },
     submitForm () {
       this.$refs.menuForm.validate((valid) => {
         if (valid) {
-          // 选中菜单数
-          const l = this.form.parentId.length
-          // 顶级菜单不能为隐式菜单
-          if (l === 0 && this.form.type === 2) {
-            this.$message.error('顶级菜单不能为隐式菜单')
-            return false
-          }
-          // 显示菜单最多只支持到3级
-          if (l === 3 && this.form.type === 1) {
-            this.$message.error('显示菜单最多只支持到三级')
-            return false
-          }
           this.loading = true
           addOrEdit(this.form).then(res => {
             this.$message.success(res.msg)
@@ -142,6 +146,7 @@ export default {
     },
     resetForm () {
       this.$refs.menuForm.resetFields()
+      this.parentIds = []
     }
   }
 }

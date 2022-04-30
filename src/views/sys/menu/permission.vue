@@ -89,7 +89,7 @@ export default {
       })
     },
     cascaderChange (v) {
-      this.form.parentId = v[v.length - 1]
+      this.form.parentId = v.length > 0 ? v[v.length - 1] : 0
     },
     submitForm () {
       this.$refs.menuForm.validate((valid) => {
@@ -108,6 +108,7 @@ export default {
     },
     resetForm () {
       this.$refs.menuForm.resetFields()
+      this.parentIds = []
     }
   }
 }
