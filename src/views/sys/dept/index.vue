@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="top">部门累计：{{ deptNum }}（个）</p>
-    <el-tree ref="deptTree" node-key="id" :props="props" :load="loadNode" lazy>
+    <el-tree ref="deptTree" node-key="id" :props="props" :load="loadNode" lazy v-loading="treeLoading">
       <div class="custom-tree-node" slot-scope="{ node, data }">
         <span>{{ node.label }}{{ getChildrenNums(data.cnum) }}</span>
         <span v-if="data.parentId === 0">
@@ -42,7 +42,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="closeDialog">取 消</el-button>
-        <el-button type="primary" @click="onSubmit" :loading="loading">提 交</el-button>
+        <el-button type="primary" @click="onSubmit" :loading="submitLoading">提 交</el-button>
       </div>
     </el-dialog>
   </div>
@@ -62,8 +62,9 @@ export default {
         isLeaf: 'leaf'
       },
       dialogTitle: '',
+      treeLoading: false,
       dialogVisible: false,
-      loading: false,
+      submitLoading: false,
       parentName: '',
       form: {},
       rules: {
@@ -80,7 +81,9 @@ export default {
       }
     },
     loadNodeData (id, resolve) {
+      this.treeLoading = true
       getTreeData({ parentId: id }).then(res => {
+        this.treeLoading = false
         if (id === 0) {
           this.deptNum = res.data.deptNum
         }
@@ -122,13 +125,13 @@ export default {
     onSubmit () {
       this.$refs.deptForm.validate((valid) => {
         if (valid) {
-          this.loading = true
+          this.submitLoading = true
           addOrEdit(this.form).then(res => {
-            this.loading = false
+            this.submitLoading = false
             this.$message.success(res.msg)
             this.closeDialog(true)
           }).catch(() => {
-            this.loading = false
+            this.submitLoading = false
           })
         } else {
           return false

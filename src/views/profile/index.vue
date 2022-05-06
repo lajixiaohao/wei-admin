@@ -76,7 +76,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputValidator: validatePassword,
-        inputErrorMessage: '密码输入有误',
+        inputErrorMessage: '必须包含大小写字母和数字的组合，可以使用特殊字符，长度在6-15之间',
         inputType: 'password',
         closeOnClickModal: false
       }).then(({

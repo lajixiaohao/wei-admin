@@ -39,7 +39,8 @@ import {
   DescriptionsItem,
   CheckboxGroup,
   Checkbox,
-  Cascader
+  Cascader,
+  Loading
 } from 'element-ui'
 
 Vue.use(Button)
@@ -80,6 +81,7 @@ Vue.use(DescriptionsItem)
 Vue.use(CheckboxGroup)
 Vue.use(Checkbox)
 Vue.use(Cascader)
+Vue.use(Loading.directive)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

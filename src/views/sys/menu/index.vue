@@ -4,7 +4,7 @@
       <el-button type="primary" size="mini" @click="addMenu">添加菜单</el-button>
       <el-button type="success" size="mini" @click="addPermission">添加权限</el-button>
     </div>
-    <el-tree ref="menuTree" node-key="id" :props="props" :load="loadNode" lazy>
+    <el-tree ref="menuTree" node-key="id" :props="props" :load="loadNode" lazy v-loading="loading">
       <div class="custom-tree-node" slot-scope="{ node, data }">
         <div>
           <el-tooltip v-if="data.type !== 3 && !data.isShow" class="item" effect="dark" content="菜单不可见" placement="right">
@@ -28,6 +28,7 @@ export default {
   name: 'Menu',
   data () {
     return {
+      loading: false,
       node: null,
       props: {
         label: 'title',
@@ -44,7 +45,9 @@ export default {
       }
     },
     loadNodeData (id, resolve) {
+      this.loading = true
       getTreeData({ parentId: id }).then(res => {
+        this.loading = false
         return resolve(res.data.menu)
       })
     },
