@@ -6,8 +6,12 @@
       node-key="id"
       show-checkbox
       check-strictly
+      default-expand-all
       :default-checked-keys="checked"
       v-loading="treeLoading" />
+    <div class="submit">
+      <el-button type="primary" size="mini" @click="onSubmit" :loading="submitLoading">立即提交</el-button>
+    </div>
   </div>
 </template>
 
@@ -21,7 +25,8 @@ export default {
       roleId: 0,
       treeLoading: false,
       menus: [],
-      checked: []
+      checked: [],
+      submitLoading: false
     }
   },
   created () {
@@ -41,6 +46,23 @@ export default {
       }).catch(() => {
         this.treeLoading = false
       })
+    },
+    onSubmit () {
+      const ids = this.$refs.permissionTree.getCheckedKeys().toString()
+      if (ids.length < 1) {
+        this.$message.error('请选择权限')
+        return
+      }
+      this.submitLoading = true
+      permissionAssign({
+        roleId: this.roleId,
+        ids: ids
+      }).then(res => {
+        this.submitLoading = false
+        this.$message.success(res.msg)
+      }).catch(() => {
+        this.submitLoading = false
+      })
     }
   }
 }
@@ -50,5 +72,8 @@ export default {
   .el-tree {
     width: 600px;
     margin-top: 10px;
+  }
+  .submit {
+    margin: 20px 0 0 10px;
   }
 </style>
