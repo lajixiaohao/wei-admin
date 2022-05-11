@@ -375,12 +375,12 @@ export default {
   .tags-view-item:first-of-type {
     margin-left: 20px;
   }
-  .active {
+  .tags-view .active {
     background-color: #00b685;
     border-color: #00b685;
     color: #f1f1f1;
   }
-  .active::before {
+  .tags-view .active::before {
     content: '';
     display: inline-block;
     width: 8px;

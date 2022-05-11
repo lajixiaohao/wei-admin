@@ -1,25 +1,13 @@
 <template>
   <div>
+    <!-- 工具栏 -->
     <div class="tool">
-      <div class="search">
-        <el-input
-          v-model="roleName"
-          size="mini"
-          placeholder="请输入角色名称"
-          clearable
-          @keyup.enter.native="search" />
-        <el-button
-          type="primary"
-          size="mini"
-          @click="search"
-          :loading="searchLoading"
-          icon="el-icon-search">搜索</el-button>
-      </div>
-      <div>
-        <el-button type="primary" size="mini" icon="el-icon-plus" @click="add">添加角色</el-button>
-        <el-button type="success" size="mini" @click="showRoleTree">角色关系树</el-button>
-      </div>
+      <el-input v-model="roleName" size="mini" placeholder="请输入角色名称" @keyup.enter.native="search" clearable />
+      <el-button type="primary" size="mini" @click="search" :loading="searchLoading" icon="el-icon-search">搜索</el-button>
+      <el-button type="primary" size="mini" icon="el-icon-plus" @click="add">添加角色</el-button>
+      <el-button type="success" size="mini" @click="showRoleTree">角色关系树</el-button>
     </div>
+    <!-- 表格 -->
     <el-table :data="list" v-loading="tableLoading" border row-key="id">
       <el-table-column type="index" :index="indexMethod" label="序号" width="50"></el-table-column>
       <el-table-column prop="roleName" label="角色名称"></el-table-column>
@@ -38,6 +26,13 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页 -->
+    <el-pagination
+      background
+      layout="total, prev, pager, next"
+      :total="count"
+      :page-size.sync="size"
+      @current-change="getDatas" />
     <!-- 添加、编辑 -->
     <el-dialog
       :title="dialogTitle"
@@ -166,6 +161,7 @@ export default {
     },
     closeDialog (res) {
       this.dialogVisible = false
+      this.$refs.roleForm.resetFields()
       if (res === true) {
         this.getDatas(this.page)
       }
@@ -189,23 +185,17 @@ export default {
       }).catch(() => {})
     },
     assignPermission (row) {
-      this.$router.push('/sys/role/assign-permission?roleId=' + row.id)
+      this.$router.push('/sys/role/permission?roleId=' + row.id)
     }
   }
 }
 </script>
 
 <style scoped>
-  .tool {
-    display: flex;
-    align-items: center;
+  .tool .el-input {
+    width: 180px;
   }
-  .search {
-    display: flex;
-    width: 260px;
-    margin-right: 10px;
-  }
-  .search .el-button {
+  .tool .el-button {
     margin-left: 10px;
   }
   .el-dialog .el-form {

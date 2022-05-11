@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p>为角色：“{{ roleName }}”分配权限</p>
     <el-tree
       :data="menus"
       ref="permissionTree"
@@ -23,6 +24,7 @@ export default {
   data () {
     return {
       roleId: 0,
+      roleName: '',
       treeLoading: false,
       menus: [],
       checked: [],
@@ -43,6 +45,7 @@ export default {
         this.treeLoading = false
         this.menus = res.data.menus
         this.checked = res.data.checked
+        this.roleName = res.data.roleName
       }).catch(() => {
         this.treeLoading = false
       })
@@ -69,9 +72,13 @@ export default {
 </script>
 
 <style scoped>
+  p {
+    font-size: 15px;
+  }
   .el-tree {
-    width: 600px;
+    max-width: 600px;
     margin-top: 10px;
+    border-left: 1px solid #e2e2e2;
   }
   .submit {
     margin: 20px 0 0 10px;
