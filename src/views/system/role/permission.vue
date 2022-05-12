@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>为角色：“{{ roleName }}”分配权限</p>
+    <p>为角色：“{{ roleName }}”，分配权限</p>
     <el-tree
       :data="menus"
       ref="permissionTree"
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { permissionAssign } from '@/common/api/sys/role'
+import { permissionAssign } from '@/common/api/system/role'
 
 export default {
   name: 'AssignPermission',

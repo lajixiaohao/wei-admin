@@ -13,7 +13,7 @@
         <el-input v-model="form.trueName" placeholder="请输入姓名" maxlength="20" clearable />
       </el-form-item>
       <el-form-item label="角色" prop="roleId">
-        <el-select v-model="form.roleId" placeholder="请选择">
+        <el-select v-model="form.roleId" placeholder="请选择或搜索" clearable filterable>
           <el-option v-for="item in roles" :key="item.id" :label="item.roleName" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -30,7 +30,7 @@
           default-expand-all />
       </el-form-item>
       <el-form-item label="岗位" prop="postId">
-        <el-select v-model="form.postId" placeholder="请选择">
+        <el-select v-model="form.postId" placeholder="请选择或搜索" clearable filterable>
           <el-option v-for="item in posts" :key="item.id" :label="item.postName" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -49,7 +49,7 @@
 <script>
 import { validateAccount, validatePassword, validateTrueName } from '@/common/utils/validate'
 import { encryptData } from '@/common/utils/rsa'
-import { addOrEdit } from '@/common/api/sys/admin'
+import { addOrEdit } from '@/common/api/system/admin'
 
 export default {
   name: 'AdminForm',

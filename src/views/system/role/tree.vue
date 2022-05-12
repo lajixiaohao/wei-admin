@@ -1,6 +1,6 @@
 <template>
-  <el-dialog title="角色关系树" :visible.sync="isShowTreeDialog" @close="closeDialog" :close-on-click-modal="false">
-    <el-tree :props="props" :load="loadNode" lazy></el-tree>
+  <el-dialog title="角色关系树" :visible.sync="treeData.isShow" @close="closeDialog" :close-on-click-modal="false">
+    <el-tree :props="props" :load="loadNode" lazy />
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="refresh">刷 新</el-button>
       <el-button @click="closeDialog">关 闭</el-button>
@@ -9,16 +9,14 @@
 </template>
 
 <script>
-import {
-  getTreeData
-} from '@/common/api/role'
+import { getTreeData } from '@/common/api/system/role'
 
 export default {
   name: 'RoleTree',
   data () {
     return {
       props: {
-        label: 'role_name',
+        label: 'roleName',
         isLeaf: 'leaf'
       },
       node: null,
@@ -26,9 +24,13 @@ export default {
     }
   },
   props: {
-    isShowTreeDialog: {
-      type: Boolean,
-      default: false
+    treeData: {
+      type: Object,
+      default: function () {
+        return {
+          isShow: false
+        }
+      }
     }
   },
   methods: {
@@ -45,10 +47,8 @@ export default {
       }
     },
     loadNodeData (id, resolve) {
-      getTreeData({
-        id: id
-      }).then(res => {
-        return resolve(res.data.list)
+      getTreeData({ id: id }).then(res => {
+        return resolve(res.data)
       })
     },
     refresh () {
@@ -58,6 +58,3 @@ export default {
   }
 }
 </script>
-
-<style>
-</style>

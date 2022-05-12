@@ -315,8 +315,7 @@ export default {
  .el-menu-item:hover {
     background-color: #141e2a!important;
   }
-  .el-menu-item .svg-icon,
-  .el-submenu .svg-icon {
+  .el-menu-item .svg-icon, .el-submenu .svg-icon {
     margin-right: 10px;
   }
   .el-header {

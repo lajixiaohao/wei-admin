@@ -67,10 +67,10 @@
 </template>
 
 <script>
-import { addOrEdit } from '@/common/api/sys/menu'
+import { addOrEdit } from '@/common/api/system/menu'
 
 export default {
-  name: 'AddOrEditMenu',
+  name: 'MenuForm',
   data () {
     return {
       loading: false,

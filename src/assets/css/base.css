@@ -1,12 +1,5 @@
 @import url("./normalize.css");
-/* 获取根元素html */
-:root{
-	/* 常用变量样式 */
-	--systemNameColor: #F0F9EB;
-}
-html,
-body,
-#app {
+html, body, #app {
 	margin: 0;
 	padding: 0;
 	width: 100%;
@@ -14,8 +7,7 @@ body,
 	font-size: 16px;
 	font-family: arial,'microsoft yahei';
 }
-.el-pagination,
-.el-table {
+.el-pagination, .el-table {
 	margin-top: 15px;
 }
 .form-tips {

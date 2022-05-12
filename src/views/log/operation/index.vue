@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="search">
-      <el-input v-model="account" size="mini" placeholder="请输入管理员账号" autocomplete="off" clearable
-        @keyup.enter.native="search()" />
-      <el-button type="primary" size="mini" @click="search()" :loading="loading" icon="el-icon-search">搜索</el-button>
-      <el-button type="info" size="mini" @click="exportExcel" :loading="downloadLoading" icon="el-icon-download">导出</el-button>
+    <!-- 工具栏 -->
+    <div class="tool">
+      <el-input v-model="account" size="mini" placeholder="请输入管理员账号" clearable @keyup.enter.native="search" />
+      <el-button type="primary" size="mini" @click="search" :loading="searchLoading" icon="el-icon-search">搜索</el-button>
     </div>
-    <el-table :data="list" :loading="true" border>
+    <!-- 表格 -->
+    <el-table :data="tableData" v-loading="tableLoading" border>
       <el-table-column type="index" :index="indexMethod" label="序号" width="50"></el-table-column>
       <el-table-column prop="account" label="管理员"></el-table-column>
       <el-table-column prop="api" label="API标识"></el-table-column>
@@ -17,69 +17,62 @@
           <el-link type="primary" @click="detail(scope.row.device)">{{ shortDevice(scope.row.device) }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="created_at" label="创建时间"></el-table-column>
+      <el-table-column prop="createdAt" label="创建时间"></el-table-column>
     </el-table>
-    <el-pagination background layout="total, prev, pager, next" :total="count" :page-size.sync="size"
-      @current-change="loadList" />
+    <!-- 分页 -->
+    <el-pagination
+      background
+      layout="total, prev, pager, next"
+      :total="count"
+      :page-size.sync="size"
+      @current-change="getDatas" />
   </div>
 </template>
 
 <script>
-import {
-  getOperationList,
-  exportOperationLog
-} from '@/common/api/log'
+import { getOperationLogs } from '@/common/api/log/operation'
 
 export default {
   name: 'OperationLog',
   data () {
     return {
-      list: [],
+      tableData: [],
       count: 0,
       page: 1,
       size: 10,
       account: '',
-      loading: false,
-      downloadLoading: false
+      searchLoading: false,
+      tableLoading: false
     }
   },
   created () {
-    this.loadList(1)
+    this.getDatas(1)
   },
   methods: {
-    loadList (page) {
+    getDatas (page) {
+      this.tableLoading = true
       this.page = page
-      getOperationList({
+      getOperationLogs({
         page: page,
         size: this.size,
         account: this.account
       }).then(res => {
-        this.list = res.data.list
+        this.tableData = res.data.list
         this.count = res.data.count
-        this.loading = false
+        this.searchLoading = this.tableLoading = false
       }).catch(() => {
-        this.loading = false
+        this.searchLoading = this.tableLoading = false
       })
     },
     indexMethod (index) {
       return (this.page - 1) * this.size + index + 1
     },
     search () {
-      this.loading = true
-      this.loadList(1)
+      this.searchLoading = true
+      this.getDatas(1)
     },
     detail (v) {
       this.$alert(v)
-    },
-    exportExcel () {
-      this.downloadLoading = true
-      exportOperationLog({
-        account: this.account
-      }).then(res => {
-        this.downloadLoading = false
-      }).catch(() => {
-        this.downloadLoading = false
-      })
     }
   },
   computed: {
@@ -93,12 +86,10 @@ export default {
 </script>
 
 <style scoped>
-  .search {
-    display: flex;
-    width: 320px;
+  .tool .el-input {
+    width: 180px;
   }
-
-  .search .el-button {
+  .tool .el-button {
     margin-left: 10px;
   }
 </style>

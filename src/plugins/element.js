@@ -13,17 +13,14 @@ import {
   Aside,
   Main,
   Footer,
-  Image,
   Menu,
   MenuItem,
   Submenu,
   Breadcrumb,
   BreadcrumbItem,
-  Tooltip,
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  Divider,
   Table,
   TableColumn,
   Pagination,
@@ -31,16 +28,15 @@ import {
   InputNumber,
   Select,
   Option,
-  Switch,
   Tree,
   Radio,
-  Link,
   Descriptions,
   DescriptionsItem,
-  CheckboxGroup,
   Checkbox,
   Cascader,
-  Loading
+  Loading,
+  Divider,
+  Link
 } from 'element-ui'
 
 Vue.use(Button)
@@ -54,17 +50,14 @@ Vue.use(Header)
 Vue.use(Aside)
 Vue.use(Main)
 Vue.use(Footer)
-Vue.use(Image)
 Vue.use(Menu)
 Vue.use(MenuItem)
 Vue.use(Submenu)
 Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
-Vue.use(Tooltip)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
-Vue.use(Divider)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Pagination)
@@ -72,16 +65,15 @@ Vue.use(Dialog)
 Vue.use(InputNumber)
 Vue.use(Select)
 Vue.use(Option)
-Vue.use(Switch)
 Vue.use(Tree)
 Vue.use(Radio)
-Vue.use(Link)
 Vue.use(Descriptions)
 Vue.use(DescriptionsItem)
-Vue.use(CheckboxGroup)
 Vue.use(Checkbox)
 Vue.use(Cascader)
 Vue.use(Loading.directive)
+Vue.use(Divider)
+Vue.use(Link)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

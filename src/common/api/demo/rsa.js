@@ -1,8 +1,8 @@
-import { request } from '../utils/request.js'
+import { request } from '@/common/utils/request.js'
 
 export function getRsaKey (param) {
   return request({
-    url: 'api/encryption/rsa',
+    url: 'encryption/rsa',
     method: 'get',
     params: param
   })

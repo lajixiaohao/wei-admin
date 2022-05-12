@@ -1,6 +1,7 @@
 <template>
   <div>
     <p class="top">部门累计：{{ deptNum }}（个）</p>
+    <!-- 树 -->
     <el-tree ref="deptTree" node-key="id" :props="props" :load="loadNode" lazy v-loading="treeLoading">
       <div class="custom-tree-node" slot-scope="{ node, data }">
         <span>{{ node.label }}{{ getChildrenNums(data.cnum) }}</span>
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-import { getTreeData, addOrEdit, remove } from '@/common/api/sys/dept'
+import { getTreeData, addOrEdit, remove } from '@/common/api/system/dept'
 
 export default {
   name: 'Dept',

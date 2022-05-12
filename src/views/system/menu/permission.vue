@@ -17,7 +17,7 @@
       </el-form-item>
       <el-form-item label="权限标识" prop="path">
         <el-input v-model="form.path" placeholder="请输入权限标识" clearable />
-        <span class="form-tips">例：api:sys:get</span>
+        <span class="form-tips">例：api:role:get</span>
       </el-form-item>
       <el-form-item label="排序" prop="sort">
         <el-input-number v-model="form.sort" :min="1" />
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { addOrEditPermission } from '@/common/api/sys/menu'
+import { addOrEditPermission } from '@/common/api/system/menu'
 
 export default {
   name: 'Permission',

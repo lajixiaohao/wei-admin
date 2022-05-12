@@ -1,12 +1,14 @@
 <template>
   <div class="bg">
     <el-row>
+      <!-- 左侧 -->
       <el-col>
         <div class="box-left">
           <div class="welcome">欢迎使用</div>
           <div class="system">{{ webTitle }}</div>
         </div>
       </el-col>
+      <!-- 右侧 -->
       <el-col>
         <div class="box-right">
           <el-form :model="loginForm" :rules="rules" ref="loginForm">
@@ -187,8 +189,7 @@ export default {
     width: 840px;
     height: 380px;
   }
-  .box-left,
-  .box-right {
+  .box-left, .box-right {
     height: 100%;
   }
   .box-left {

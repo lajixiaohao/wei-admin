@@ -31,3 +31,28 @@ export function addOrEdit (data) {
     data
   })
 }
+
+export function getTreeData (param) {
+  return request({
+    url: 'admin/tree',
+    method: 'get',
+    params: param
+  })
+}
+
+export function modifySuperior (data) {
+  return request({
+    url: 'admin/modify-superior',
+    method: 'post',
+    data
+  })
+}
+
+export function exportData (param) {
+  return request({
+    url: 'admin/export',
+    method: 'get',
+    params: param,
+    responseType: 'blob'
+  })
+}
