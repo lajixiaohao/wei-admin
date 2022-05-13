@@ -9,10 +9,14 @@
     <el-table :data="tableData" v-loading="tableLoading" border>
       <el-table-column type="index" :index="indexMethod" label="序号" width="50"></el-table-column>
       <el-table-column prop="account" label="管理员"></el-table-column>
-      <el-table-column prop="ip" label="ip"></el-table-column>
+      <el-table-column prop="ip" label="ip">
+        <template slot-scope="scope">
+          <el-link type="primary" :href="'https://www.ip138.com/iplookup.asp?ip=' + scope.row.ip + '&action=2'" target="_blank">{{ scope.row.ip }}</el-link>
+        </template>
+      </el-table-column>
       <el-table-column prop="device" label="登录设备">
         <template slot-scope="scope">
-          <el-link type="primary" @click="detail(scope.row.device)">{{ shortDevice(scope.row.device) }}</el-link>
+          <el-link @click="detail(scope.row.device)">{{ shortDevice(scope.row.device) }}</el-link>
         </template>
       </el-table-column>
       <el-table-column prop="loginAt" label="登录时间"></el-table-column>
