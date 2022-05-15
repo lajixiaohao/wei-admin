@@ -36,7 +36,8 @@ import {
   Cascader,
   Loading,
   Divider,
-  Link
+  Link,
+  Tooltip
 } from 'element-ui'
 
 Vue.use(Button)
@@ -74,6 +75,7 @@ Vue.use(Cascader)
 Vue.use(Loading.directive)
 Vue.use(Divider)
 Vue.use(Link)
+Vue.use(Tooltip)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
