@@ -1,5 +1,5 @@
 <template>
-  <div style="border: 1px solid #ccc;">
+  <div style="border: 1px solid #ccc; line-height: 1;">
     <Toolbar
       style="border-bottom: 1px solid #ccc"
       :editor="editor"
@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import '@wangeditor/editor/dist/css/style.css'
 import { UPLOAD_IMAGE_URL, UPLOAD_VIDEO_URL } from '@/common/const'
 import { getToken } from '@/common/utils/auth'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
@@ -101,10 +100,17 @@ export default {
       }
     }
   },
+  watch: {
+    content (v) {
+      if (v) {
+        this.html = v
+      }
+    }
+  },
   mounted () {
     setTimeout(() => {
       this.html = this.content
-    }, 100)
+    }, 300)
   },
   beforeDestroy () {
     const editor = this.editor
@@ -113,3 +119,5 @@ export default {
   }
 }
 </script>
+
+<style src="@wangeditor/editor/dist/css/style.css"></style>
