@@ -10,7 +10,7 @@ module.exports = {
   /**
    * @description 当前版本
    */
-  version: '1.0.1',
+  version: '1.0.0',
   /**
    * @description 项目开始运行年份
    */
