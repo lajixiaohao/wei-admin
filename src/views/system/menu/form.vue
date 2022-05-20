@@ -75,7 +75,7 @@ export default {
     return {
       loading: false,
       menuData: [],
-      parentIds: [47],
+      parentIds: [],
       disabled: false,
       props: {
         checkStrictly: false,
