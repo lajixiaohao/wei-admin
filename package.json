@@ -10,6 +10,7 @@
   "dependencies": {
     "@wangeditor/editor": "^5.0.0",
     "@wangeditor/editor-for-vue": "^1.0.0",
+    "@wangeditor/plugin-upload-attachment": "^1.0.0",
     "axios": "^0.26.1",
     "core-js": "^3.21.1",
     "element-ui": "^2.15.7",

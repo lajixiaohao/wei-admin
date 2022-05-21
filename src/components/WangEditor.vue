@@ -19,23 +19,90 @@
 </template>
 
 <script>
-import { UPLOAD_IMAGE_URL, UPLOAD_VIDEO_URL } from '@/common/const'
+import { UPLOAD_IMAGE_URL, UPLOAD_VIDEO_URL, UPLOAD_ATTACHMENT_URL } from '@/common/const'
 import { getToken } from '@/common/utils/auth'
+import { Boot } from '@wangeditor/editor'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import attachmentModule from '@wangeditor/plugin-upload-attachment'
+
+Boot.registerModule(attachmentModule)
 
 export default {
   name: 'WangEditor',
   data () {
+    const _this = this
     return {
       editor: null,
+      mode: 'default',
       html: '',
-      toolbarConfig: {},
+      toolbarConfig: {
+        insertKeys: {
+          index: 0,
+          keys: ['uploadAttachment']
+        }
+      },
       editorConfig: {
         placeholder: '请输入内容...',
         autoFocus: false,
-        MENU_CONF: this.menuConf()
-      },
-      mode: 'default'
+        hoverbarKeys: {
+          attachment: {
+            menuKeys: ['downloadAttachment']
+          }
+        },
+        MENU_CONF: {
+          // 图片上传配置
+          uploadImage: {
+            server: UPLOAD_IMAGE_URL,
+            fieldName: 'file',
+            maxFileSize: 5 * 1024 * 1024,
+            headers: { token: getToken() },
+            customInsert (res, insertFn) {
+              if (res.code === 0) {
+                insertFn(process.env.VUE_APP_RESOURCE_URL + res.data.path)
+              } else {
+                _this.$message.error(res.msg)
+              }
+            },
+            onError (file, err, res) {
+              _this.$message.error(err)
+            }
+          },
+          // 视频上传配置
+          uploadVideo: {
+            server: UPLOAD_VIDEO_URL,
+            fieldName: 'file',
+            maxFileSize: 50 * 1024 * 1024,
+            headers: { token: getToken() },
+            customInsert (res, insertFn) {
+              if (res.code === 0) {
+                insertFn(process.env.VUE_APP_RESOURCE_URL + res.data.path)
+              } else {
+                _this.$message.error(res.msg)
+              }
+            },
+            onError (file, err, res) {
+              _this.$message.error(err)
+            }
+          },
+          // 附件上传配置
+          uploadAttachment: {
+            server: UPLOAD_ATTACHMENT_URL,
+            fieldName: 'file',
+            maxFileSize: 5 * 1024 * 1024,
+            headers: { token: getToken() },
+            customInsert (res, file, insertFn) {
+              if (res.code === 0) {
+                insertFn(file.name, process.env.VUE_APP_RESOURCE_URL + res.data.path)
+              } else {
+                _this.$message.error(res.msg)
+              }
+            },
+            onError (file, err, res) {
+              _this.$message.error(err)
+            }
+          }
+        }
+      }
     }
   },
   props: {
@@ -57,47 +124,6 @@ export default {
     },
     customAlert (info, type) {
       this.$message.error(info)
-    },
-    menuConf () {
-      const _this = this
-      return {
-        uploadImage: {
-          server: UPLOAD_IMAGE_URL,
-          fieldName: 'file',
-          maxFileSize: 5 * 1024 * 1024,
-          headers: {
-            token: getToken()
-          },
-          customInsert (res, insertFn) {
-            if (res.code === 0) {
-              insertFn(res.data.url, '', '')
-            } else {
-              _this.$message.error(res.msg)
-            }
-          },
-          onError (file, err, res) {
-            _this.$message.error(err)
-          }
-        },
-        uploadVideo: {
-          server: UPLOAD_VIDEO_URL,
-          fieldName: 'file',
-          maxFileSize: 50 * 1024 * 1024,
-          headers: {
-            token: getToken()
-          },
-          customInsert (res, insertFn) {
-            if (res.code === 0) {
-              insertFn(res.data.url, '', '')
-            } else {
-              _this.$message.error(res.msg)
-            }
-          },
-          onError (file, err, res) {
-            _this.$message.error(err)
-          }
-        }
-      }
     }
   },
   watch: {
