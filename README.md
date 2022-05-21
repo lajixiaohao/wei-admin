@@ -12,7 +12,7 @@
    npm install
    ```
 
-2. 打开.env.development、.env.production文件，填写相应接口域名/IP
+2. 打开.env.development、.env.production文件，填写接口地址和资源地址
 
 3. 打开src/settings.js文件，完成基础配置
 
