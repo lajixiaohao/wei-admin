@@ -38,4 +38,4 @@
 
 演示地址：http://weiadmin.weifx.top/
 
-联系邮箱：2壹7陆9柒4柒3零#qq.com
+QQ群：257439358

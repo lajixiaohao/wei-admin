@@ -1,5 +1,5 @@
 <template>
-  <div style="border: 1px solid #ccc; line-height: 1;">
+  <div style="z-index: 1; border: 1px solid #ccc;">
     <Toolbar
       style="border-bottom: 1px solid #ccc"
       :editor="editor"
@@ -7,7 +7,7 @@
       :mode="mode"
     />
     <Editor
-      style="height: 300px; overflow-y: hidden;"
+      :style="editorStyle"
       v-model="html"
       :defaultConfig="editorConfig"
       @onChange="onChange"
@@ -109,6 +109,10 @@ export default {
     content: {
       type: String,
       default: ''
+    },
+    height: {
+      type: Number,
+      default: 300
     }
   },
   components: {
@@ -124,6 +128,11 @@ export default {
     },
     customAlert (info, type) {
       this.$message.error(info)
+    }
+  },
+  computed: {
+    editorStyle () {
+      return 'height: ' + this.height + 'px; overflow-y: hidden; line-height: 1.5;'
     }
   },
   watch: {
