@@ -2,7 +2,7 @@
   <el-container>
     <el-aside :width="isCollapse ? '64px' : '220px'">
       <div class="side-top">
-        <img src="@/assets/images/nazha.gif">
+        <img src="@/assets/logo.jpeg">
         <span v-show="!isCollapse" class="system">{{ webAbbreviation }}</span>
       </div>
       <div class="side-menu">

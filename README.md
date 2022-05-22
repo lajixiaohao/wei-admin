@@ -38,4 +38,4 @@
 
 演示地址：http://weiadmin.weifx.top/
 
-QQ群：257439358
+QQ交流群：257439358
