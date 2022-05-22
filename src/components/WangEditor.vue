@@ -137,9 +137,7 @@ export default {
   },
   watch: {
     content (v) {
-      if (v) {
-        this.html = v
-      }
+      this.html = v || ''
     }
   },
   mounted () {
