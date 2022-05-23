@@ -115,7 +115,7 @@
           </keep-alive>
         </transition>
       </el-main>
-      <el-footer height="30px" v-html="footerData" />
+      <el-footer height="30px">&copy; {{ footerData }}</el-footer>
     </el-container>
   </el-container>
 </template>
@@ -163,7 +163,7 @@ export default {
       const startYear = Config.startYear
       const toYear = date.getFullYear()
       const year = (startYear === toYear ? startYear : startYear + ' - ' + toYear)
-      return '&copy; ' + year + ' ' + Config.webTitle + ' V' + Config.version
+      return year + ' ' + Config.webTitle + ' V' + Config.version
     }
   },
   watch: {

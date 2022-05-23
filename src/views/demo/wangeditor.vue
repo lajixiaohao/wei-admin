@@ -2,7 +2,7 @@
   <div>
     <h4>wangEditor5示例</h4>
     <p>官网：<a href="https://www.wangeditor.com/" target="_blank">https://www.wangeditor.com/</a></p>
-    <p>本示例支持图片、视频和附件上传，具体配置请结合相关源码查看。</p>
+    <p>本示例支持图片(jpg)、视频(mp4)和附件(zip)上传，具体配置请结合相关源码自行扩展。</p>
     <WangEditor :content="content" @editorContent="getEditorContent" />
   </div>
 </template>
