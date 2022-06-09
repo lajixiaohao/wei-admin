@@ -1,6 +1,6 @@
 <template>
-  <el-container>
-    <el-aside :width="isCollapse ? '64px' : '220px'">
+  <el-container class="layout">
+    <el-aside :width="asideWidth" class="aside">
       <div class="side-top">
         <img src="@/assets/logo.jpeg">
         <span v-show="!isCollapse" class="system">{{ webAbbreviation }}</span>
@@ -65,7 +65,7 @@
         <div class="head1">
           <div class="head-left">
             <span @click="isCollapse = !isCollapse">
-              <svg-icon :icon-class="isCollapse ? 'indent' : 'outdent'" />
+              <svg-icon :icon-class="collapseIcon" />
             </span>
             <el-breadcrumb separator="/">
               <el-breadcrumb-item v-if="isActive('/dashboard') === false" :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
@@ -145,6 +145,12 @@ export default {
       'tagViews',
       'cachedViews'
     ]),
+    asideWidth () {
+      return this.isCollapse ? '64px' : '220px'
+    },
+    collapseIcon () {
+      return this.isCollapse ? 'indent' : 'outdent'
+    },
     getBreadcrumb () {
       return this.$route.meta.breadcrumb || []
     },
@@ -276,11 +282,11 @@ export default {
 </script>
 
 <style>
-  .el-container {
+  .layout {
     height: 100%;
     overflow-y: hidden;
   }
-  .el-aside {
+  .aside {
     background-color: #304156;
     transition: width .3s ease-in-out;
   }

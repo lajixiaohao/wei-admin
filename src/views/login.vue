@@ -34,9 +34,10 @@
             <el-form-item prop="captcha">
               <el-col :span="13">
                 <el-input
-                  v-model.trim="loginForm.captcha"
+                  v-model.number="loginForm.captcha"
                   placeholder="验证码"
                   maxlength="3"
+                  clearable
                   @keyup.enter.native="onSubmit">
                   <svg-icon slot="prefix" icon-class="safety" style="margin-left: 5px;" />
                 </el-input>
@@ -93,7 +94,7 @@ export default {
       },
       codeImageUrl: '',
       fit: 'contain',
-      uid: '',
+      cid: '',
       loading: false,
       rules: {
         account: [{
@@ -140,13 +141,15 @@ export default {
           login({
             account: this.loginForm.account,
             pwd: encryptData(this.loginForm.pwd),
-            uid: this.uid,
+            cid: this.cid,
             captcha: this.loginForm.captcha
           }).then(res => {
             this.loading = false
             this.$message.success(res.msg)
             setToken(res.data.token)
-            this.$router.push(this.redirectPath()).catch(() => {})
+            this.$router.push(this.redirectPath()).catch(err => {
+              console.log(err)
+            })
           }).catch(() => {
             this.loading = false
             this.loginForm.captcha = ''
@@ -165,11 +168,9 @@ export default {
       this.$refs.loginForm.resetFields()
     },
     getCode () {
-      getCaptcha({
-        appkey: Config.appKey
-      }).then(res => {
+      getCaptcha().then(res => {
         this.codeImageUrl = res.data.img
-        this.uid = res.data.uid
+        this.cid = res.data.cid
       })
     }
   }

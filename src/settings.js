@@ -20,10 +20,6 @@ module.exports = {
    */
   tokenKey: 'wei-admin-token',
   /**
-   * @description app key
-   */
-  appKey: '4564dc142edd0fcd54ba46fc01d1669f',
-  /**
    * @description public key
    */
   publicKey: `-----BEGIN PUBLIC KEY-----
