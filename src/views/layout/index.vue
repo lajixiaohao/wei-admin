@@ -146,7 +146,7 @@ export default {
       'cachedViews'
     ]),
     asideWidth () {
-      return this.isCollapse ? '64px' : '220px'
+      return this.isCollapse ? '64px' : '240px'
     },
     collapseIcon () {
       return this.isCollapse ? 'indent' : 'outdent'
