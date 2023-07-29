@@ -35,5 +35,3 @@
    ```
 
 特别备注：需配合 [wei-admin-api](https://github.com/lajixiaohao/wei-admin-api) 接口项目使用
-
-联系邮箱：2176974730#qq.com
